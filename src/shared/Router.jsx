@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MainPages from "../pages/MainPages";
-import Login from "../pages/Login";
-import DetailPages from "../pages/DetailPages";
-import Profile from "../pages/Profile";
-import GlobalStyle from "../GlobalStyle";
+import MainPages from "pages/MainPages";
+import Login from "pages/Login";
+import DetailPages from "pages/DetailPages";
+import Profile from "pages/Profile";
+import GlobalStyle from "styles/GlobalStyle";
 
 function Router() {
   return (
