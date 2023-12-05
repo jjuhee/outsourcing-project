@@ -27,7 +27,13 @@ function Login() {
           />
         </div>
         <div>
-          <LoginButton>로그인</LoginButton>
+          <LoginButton
+            onClick={() => {
+              //파이어베이스연동 로그인
+            }}
+          >
+            로그인
+          </LoginButton>
           <LoginButton
             onClick={() => {
               navigate('/signup');
