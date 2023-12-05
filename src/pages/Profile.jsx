@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 function Profile() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
   return (
-    <Stwrapper>
+    <div>
       <div> id : </div>
       <div>내가 만든 코스</div>
       <div>이미지</div>
@@ -15,7 +15,7 @@ function Profile() {
       <div>이미지</div>
       <button>로그아웃</button>
       <button onClick={() => navigate("/")}>홈으로</button>
-    </Stwrapper>
+    </div>
   );
 }
 
