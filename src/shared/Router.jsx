@@ -6,6 +6,7 @@ import DetailPages from 'pages/DetailPages';
 import Profile from 'pages/Profile';
 import GlobalStyle from 'styles/GlobalStyle';
 import GlobalColor from 'styles/GlobalColor';
+import Layout from './Layout';
 
 function Router() {
   return (
@@ -14,10 +15,12 @@ function Router() {
       <GlobalColor />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<MainPages />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<MainPages />} />
+            <Route path="/detail" element={<DetailPages />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/login" element={<Login />} />
-          <Route path="/detail" element={<DetailPages />} />
-          <Route path="/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </>
