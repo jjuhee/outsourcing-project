@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import MakeDatingCourse from './MakeDatingCourse';
 
 function MapSearch() {
   const [inputTitle, setInputTitle] = useState('');
@@ -20,10 +21,8 @@ function MapSearch() {
           onChange={inputTitleHandler}
         />
         <button type="submit">검색</button>
-
-        {/* <button>검색결과1</button>
-        <button>검색결과2</button> */}
       </form>
+      <MakeDatingCourse />
     </StyledMap>
   );
 }
@@ -41,7 +40,7 @@ const StyledMap = styled.form`
   & input {
   }
   & img {
-    width: 600px;
+    width: 400px;
   }
   & button {
     border-radius: 10px;
