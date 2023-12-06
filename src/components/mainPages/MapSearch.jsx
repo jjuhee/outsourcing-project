@@ -12,7 +12,6 @@ function MapSearch() {
   };
   return (
     <StyledMap>
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt-ovmocWvVYCo1g2IIo1fqKxQtAByXUzxkA&usqp=CAU"></img>
       <form onSubmit={searchPlaceHandler}>
         <input
           type="text"
