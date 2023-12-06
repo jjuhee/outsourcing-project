@@ -1,98 +1,125 @@
-import React from "react";
-import styled from "styled-components";
-
-import { useState } from "react";
-import { auth } from "../firebase";
 import {
   createUserWithEmailAndPassword,
+  getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { signIn as signInActionCreator } from "../redux/modules/auth";
+  updateProfile
+} from 'firebase/auth';
+import { app, db } from '../firebase';
+// import { app } from 'firebase';
+import { auth } from '../firebase';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const dispatch = useDispatch();
-
-  const Rest_api_key = "8f6f8d7af58f247447b8ce9f1dc4e03f"; //REST API KEY
-  const redirect_uri = "http://localhost:3000/"; //Redirect URI
-
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [nickname, setNickname] = useState('');
   const navigate = useNavigate();
 
-  const login = () => {
-    dispatch({ type: "LOGIN" });
-  };
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      console.log('user', user);
+    });
+  }, []);
 
   const onChange = (event) => {
     const {
-      target: { name, value },
+      target: { name, value }
     } = event;
-    if (name === "email") {
+    if (name === 'email') {
       setEmail(value);
     }
-    if (name === "password") {
+    if (name === 'password') {
       setPassword(value);
+    }
+  };
+
+  const signUp = async (event) => {
+    event.preventDefault();
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log('error with signUp', errorCode, errorMessage);
+      // ..
     }
   };
 
   // 파이어베이스에 있는 로그인 정보와 동일하다면 "로그인이 되었습니다!!!" 그렇지 않다면
   // 아이디와 비밀번호를 다시 확인해주세요" 가 나온다.
+
   const signIn = async (event) => {
     event.preventDefault();
-    if (email === "") {
-      return alert("이메일을 입력해주세요");
+    if (email === '') {
+      return alert('이메일을 입력해주세요');
     }
-    if (password === "") {
-      return alert("비밀번호를 입력해주세요");
+    if (password === '') {
+      return alert('비밀번호를 입력해주세요');
     }
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        password,
+        password
       );
-      const signinAction = signInActionCreator(userCredential.user);
-      dispatch(signinAction);
+      console.log('user with signIn', userCredential.user);
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
-      // // return alert('비밀번호 또는 이메일을 확인해주세요');
+      console.log('error with signIn', errorCode, errorMessage);
+      return alert('비밀번호 또는 이메일을 확인해주세요');
     }
-    navigate("/");
+    navigate('/profile');
   };
 
   return (
-    <div>
-      <div>
+    <div className="App">
+      <h2>로그인 페이지</h2>
+      <form>
         <div>
-          <label>이메일</label>
+          <label>이메일 : </label>
           <input
             type="email"
             value={email}
             name="email"
             onChange={onChange}
             required
-          />
+          ></input>
         </div>
         <div>
-          <label>비밀번호</label>
+          <label>비밀번호 : </label>
           <input
             type="password"
-            placeholder="비밀번호"
             value={password}
             name="password"
             onChange={onChange}
             required
-          />
+          ></input>
         </div>
-
-        <button onClick={signIn} text="로그인" />
-        <button text="회원가입" />
-      </div>
+        <div>
+          <label>닉네임 : </label>
+          <input
+            value={nickname}
+            name="nickname"
+            onChange={onChange}
+            required
+          ></input>
+        </div>
+        <button onClick={signUp}>회원가입</button>
+        <button onClick={signIn}>로그인</button>
+      </form>
     </div>
   );
-}
+};
+
+export default Login;
