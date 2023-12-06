@@ -1,39 +1,49 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase/firebase.config';
 function Login() {
-  const [loginID, setLoginID] = useState('');
-  const [loginPw, setLoginPw] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const signIn = async (event) => {
+    event.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(userCredential);
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <form>
         <div>
           <LoginInput
             type="email"
-            // value={email}
+            value={email}
             onChange={(e) => {
-              setLoginID(e.target.value);
+              setEmail(e.target.value);
             }}
             placeholder="아이디를 작성해주세요"
           />
           <LoginInput
             type="password"
-            // value={password}
+            value={password}
             onChange={(e) => {
-              setLoginPw(e.target.value);
+              setPassword(e.target.value);
             }}
             placeholder="암호를 작성해주세요"
           />
         </div>
         <div>
-          <LoginButton
-            onClick={() => {
-              //파이어베이스연동 로그인
-            }}
-          >
-            로그인
-          </LoginButton>
+          <LoginButton onClick={signIn}>로그인</LoginButton>
           <LoginButton
             onClick={() => {
               navigate('/signup');
