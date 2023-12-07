@@ -10,6 +10,7 @@ function MainPages() {
     <>
       <Map />
       <MapSearch />
+      <MakeDatingCourse />
       <SearchResult />
       <CompletedDatingCourse />
     </>
