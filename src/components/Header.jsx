@@ -7,9 +7,7 @@ function Header() {
   const mainPagesHandler = () => {
     navigate('/');
   };
-  const detailPagesHandler = () => {
-    navigate('/detail');
-  };
+
   const profileHandler = () => {
     navigate('/profile');
   };
@@ -19,7 +17,6 @@ function Header() {
         <button onClick={mainPagesHandler}>홈으로</button>
         <span>커플 더플 (Couple The Place)</span>
         <div>
-          <button onClick={detailPagesHandler}>코스짜기</button>
           <button onClick={profileHandler}>프로필</button>
         </div>
       </StyledBtn>
