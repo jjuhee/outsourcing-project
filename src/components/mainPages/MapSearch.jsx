@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import MakeDatingCourse from './MakeDatingCourse';
+import MyMap from './MyMap';
 
 function MapSearch() {
   const [inputTitle, setInputTitle] = useState('');
-  const [localList, setLocalList] = useState(null);
-
-  const [info, setInfo] = useState('');
+  const [places, setPlaces] = useState([]);
+  const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [prevPlace, setPrevPlace] = useState({});
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState(null);
   const { kakao } = window;
@@ -17,7 +18,7 @@ function MapSearch() {
     ps.keywordSearch(inputTitle, (data, status, _pagination) => {
       if (status === kakao.maps.services.Status.OK) {
         console.log(data);
-        setLocalList(data); // TODO : firebase + react query 로 옮기기
+        setPlaces(data); // TODO : firebase + react query 로 옮기기
 
         // 마커 추가
         const bounds = new kakao.maps.LatLngBounds();
@@ -42,36 +43,33 @@ function MapSearch() {
     });
   };
 
+  const clickAddCourseHandler = (place) => {
+    setPrevPlace(place);
+
+    if (selectedPlaces.length === 0) {
+      setSelectedPlaces((prevselectedPlaces) => {
+        return [...prevselectedPlaces, place];
+      });
+    } else if (selectedPlaces.length < 3) {
+      if (prevPlace.id === place.id) {
+        alert('중복되었습니다!');
+      } else {
+        setSelectedPlaces((prevselectedPlaces) => {
+          return [...prevselectedPlaces, place];
+        });
+      }
+    } else if (selectedPlaces.length >= 3) {
+      alert('3개까지만 담을 수 있습니다!');
+    }
+  };
+
   const inputTitleHandler = (e) => {
     setInputTitle(e.target.value);
   };
 
   return (
     <StMapSearch>
-      <Map // 로드뷰를 표시할 Container
-        center={{
-          lat: 37.566826,
-          lng: 126.9786567
-        }}
-        style={{
-          width: '440px',
-          height: '440px'
-        }}
-        level={3}
-        onCreate={setMap}
-      >
-        {markers.map((marker) => (
-          <MapMarker
-            key={`marker-${marker.content}-${marker.position.lat},${marker.position.lng}`}
-            position={marker.position}
-            onClick={() => setInfo(marker)}
-          >
-            {info && info.content === marker.content && (
-              <div style={{ color: '#000' }}>{marker.content}</div>
-            )}
-          </MapMarker>
-        ))}
-      </Map>
+      <MyMap markers={markers} setMap={setMap} />
 
       <StSearchBox>
         <form onSubmit={searchPlaceHandler}>
@@ -85,14 +83,17 @@ function MapSearch() {
         </form>
 
         <StListArea>
-          {localList ? (
-            localList.map((item, index) => {
+          {places ? (
+            places.map((place) => {
               return (
-                <StArea key={index}>
-                  <StTitle>{item.place_name}</StTitle>
-                  <StP>{item.road_address_name}</StP>
-                  <StP>{item.phone}</StP>
-                  <StUrl>{item.place_url}</StUrl>
+                <StArea key={place.id}>
+                  <StTitle>{place.place_name}</StTitle>
+                  <StP>{place.road_address_name}</StP>
+                  <StP>{place.phone}</StP>
+                  <StUrl href={place.place_url}>{place.place_url}</StUrl>
+                  <StButton onClick={() => clickAddCourseHandler(place)}>
+                    코스로 추가
+                  </StButton>
                 </StArea>
               );
             })
@@ -101,6 +102,7 @@ function MapSearch() {
           )}
         </StListArea>
       </StSearchBox>
+      <MakeDatingCourse selectedPlaces={selectedPlaces} />
     </StMapSearch>
   );
 }
@@ -119,10 +121,13 @@ const StSearchBox = styled.div`
   align-items: center;
   text-align: center;
   & input {
+    height: 25px;
+    padding: 5px;
+    font-size: 0.9rem;
   }
-  & button {
+  & form > button {
     border-radius: 10px;
-    margin: 10px auto;
+    height: 25px;
   }
 `;
 
@@ -135,9 +140,11 @@ const StListArea = styled.div`
 `;
 
 const StArea = styled.div`
+  margin: 5px;
   padding: 5px;
-  height: 67px;
-  border-bottom: 1px solid black;
+  height: 100px;
+  border: 1px solid black;
+  border-radius: 10px;
   & p {
     margin-bottom: 2px;
   }
@@ -152,7 +159,10 @@ const StP = styled.p`
   font-size: 0.7rem;
 `;
 
-const StUrl = styled.p`
+const StUrl = styled.a`
   font-size: 0.6rem;
-  color: gray;
+  color: #2eaee3;
+  margin-bottom: 7px;
 `;
+
+const StButton = styled.button``;
