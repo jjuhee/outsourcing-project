@@ -14,7 +14,6 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [users, setUsers] = useState([]);
   const auth = getAuth();
-  const user = auth.currentUser;
   const navigate = useNavigate();
   const localStorageEmail = localStorage.getItem('email');
 
