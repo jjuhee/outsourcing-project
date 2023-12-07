@@ -8,7 +8,7 @@ import Map from 'components/mainPages/Map';
 function MainPages() {
   return (
     <>
-      <Map />
+      {/* <Map /> */}
       <MapSearch />
       <MakeDatingCourse />
       <SearchResult />
