@@ -1,46 +1,71 @@
-import { signOut } from 'firebase/auth';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { auth } from '../firebase';
-import { getAuth } from 'firebase/auth';
+import { auth, db } from '../firebase/firebase.config';
 import Button from 'components/common/Button';
 import Avatar from 'components/common/Avartar';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
+// import { collection, getDocs } from '../firebase/firebase.config';
+import { signOut, getAuth } from 'firebase/auth';
+import { doc, getDocs, collection, query, updateDoc } from 'firebase/firestore';
 
 function Profile() {
+  const [editingText, setEditingText] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [users, setUsers] = useState([]);
   const auth = getAuth();
   const user = auth.currentUser;
-  if (user !== null) {
-    // The user object has basic properties such as display name, email, etc.
-    const displayName = user.displayName;
-    const email = user.email;
-    const photoURL = user.photoURL;
-    const emailVerified = user.emailVerified;
-    console.log(email);
-
-    // The user's ID, unique to the Firebase project. Do NOT use
-    // this value to authenticate with your backend server, if
-    // you have one. Use User.getToken() instead.
-    const uid = user.uid;
-  }
-
-  // const dispatch = useDispatch();
   const navigate = useNavigate();
+  const localStorageEmail = localStorage.getItem('email');
+
+  // 버튼 클릭시 Localstorage에 있는 값이 삭제되며, 다시 로그인 페이지로 간다.
+
   const logOut = async (event) => {
     event.preventDefault();
     await signOut(auth);
+    localStorage.removeItem('email');
     navigate('/login');
   };
-  useEffect(async () => {
-    const query = await getDocs(collection(db, 'users'));
-    query.forEach((doc) => {
-      console.log(doc.id, doc.data());
-    });
+
+  // 데이터 가져오기
+  useEffect(() => {
+    const fetchData = async () => {
+      const q = query(collection(db, 'users'));
+      const querySnapshot = await getDocs(q);
+      const initialUsers = [];
+      querySnapshot.forEach((doc) => {
+        const data = {
+          id: doc.id, //
+          ...doc.data()
+        };
+        initialUsers.push(data);
+      });
+
+      setUsers(initialUsers);
+    };
+    fetchData();
   }, []);
 
+  // 입력받은 값 파이어베이스에 수정하기
+  const onEditDone = async (event) => {
+    const user = users.find((user) => user.email === localStorageEmail);
+    const userRef = doc(db, 'users', user.id);
+    await updateDoc(userRef, { ...user, nickname: editingText });
+
+    const editedNickname = users.map((user) => {
+      if (user.email === localStorageEmail) {
+        return {
+          ...user,
+          nickname: editingText
+        };
+      } else {
+        return user;
+      }
+    });
+    setUsers(editedNickname);
+    setIsEditing(false);
+  };
+  console.log(users);
   return (
     <Container>
       <ProfileWrapper>
@@ -50,8 +75,29 @@ function Profile() {
           <input type="file" accept="image/jpg, image/png" />
         </label>
         <div>
-          <Nickname> 닉네임 : user.nickname</Nickname>
-          <button onClick={() => {}}>수정</button>
+          {isEditing ? (
+            <input
+              autoFocus
+              onChange={(event) => setEditingText(event.target.value)}
+            />
+          ) : (
+            <Nickname>
+              {users
+                .filter((item) => item.email === localStorageEmail)
+                .map((item) => {
+                  return item.nickname;
+                })}
+            </Nickname>
+          )}
+
+          {isEditing ? (
+            <div>
+              <button onClick={() => setIsEditing(false)}> 취소 </button>
+              <button onClick={onEditDone}>수정완료</button>
+            </div>
+          ) : (
+            <button onClick={() => setIsEditing(true)}>수정하기</button>
+          )}
         </div>
         <h1>내가 만든 코스</h1>
         <div>
