@@ -17,8 +17,9 @@ function Login() {
         email,
         password
       );
+      localStorage.setItem('email', email);
       console.log(userCredential);
-      navigate('/');
+      navigate('/profile');
     } catch (error) {
       console.error(error);
     }
