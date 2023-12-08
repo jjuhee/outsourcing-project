@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainPages from 'pages/MainPages';
 import Login from 'pages/Login';
+import Signup from '../pages/Signup';
 import DetailPages from 'pages/DetailPages';
 import Profile from 'pages/Profile';
 import GlobalStyle from 'styles/GlobalStyle';
@@ -21,6 +22,7 @@ function Router() {
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </BrowserRouter>
     </>
