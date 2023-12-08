@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Navigate, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase.config';
+import { useNavigate } from 'react-router';
 function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  
   const signIn = async (event) => {
     event.preventDefault();
     try {
@@ -25,6 +27,7 @@ function Login() {
   return (
     <>
       <form>
+        <p>로그인</p>
         <div>
           <LoginInput
             type="email"
@@ -50,7 +53,7 @@ function Login() {
               navigate('/signup');
             }}
           >
-            회원가입
+            회원가입페이지
           </LoginButton>
         </div>
       </form>
