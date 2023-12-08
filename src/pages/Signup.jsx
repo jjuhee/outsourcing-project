@@ -11,7 +11,6 @@ import {
   query,
   where
 } from 'firebase/firestore';
-import { addDoc, collection } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 function Signup() {
@@ -140,6 +139,7 @@ function Signup() {
     }
 
     setSelectedFile(file);
+  }
 
   const loginPageHandler = () => {
     navigate('/login');
@@ -171,7 +171,7 @@ function Signup() {
             maxLength={15}
           />
           <label htmlFor="nickname">Nickname</label>
-          <ImgeInput
+          <SignupInput
             type="text"
             id="nickname"
             name="nickname"
