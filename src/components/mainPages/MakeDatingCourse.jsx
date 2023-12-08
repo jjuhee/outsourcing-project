@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
-import { auth } from '../../firebase/firebase.config';
+import React, { useEffect, useState } from 'react';
+
 import uuid4 from 'uuid4';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 import { QueryClient, useMutation } from 'react-query';
 import { addDatingCourse } from 'api/course';
 
-function MakeDatingCourse({ selectedPlaces }) {
+function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   const [courseTitle, setCourseTitle] = useState('');
   const uuid = uuid4();
   const TODAY = dayjs().format('YY-MM-DD HH:mm:ss');
-  const user = auth.currentUser;
-  console.log(user);
 
   const queryClient = new QueryClient();
   const mutation = useMutation(addDatingCourse, {
@@ -34,7 +32,8 @@ function MakeDatingCourse({ selectedPlaces }) {
       place: selectedPlaces,
       createAt: TODAY
     });
-
+    setSelectedPlaces([]);
+    setCourseTitle('');
     if (mutation.isSuccess) alert('코스가 등록되었습니다!');
   };
 

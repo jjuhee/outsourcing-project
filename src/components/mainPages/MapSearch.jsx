@@ -102,7 +102,10 @@ function MapSearch() {
           )}
         </StListArea>
       </StSearchBox>
-      <MakeDatingCourse selectedPlaces={selectedPlaces} />
+      <MakeDatingCourse
+        selectedPlaces={selectedPlaces}
+        setSelectedPlaces={setSelectedPlaces}
+      />
     </StMapSearch>
   );
 }

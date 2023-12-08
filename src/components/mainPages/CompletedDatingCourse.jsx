@@ -6,11 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function CompletedDatingCourse() {
-  const user = auth.currentUser;
-  console.log(user);
-
   const { isLoading, isError, data } = useQuery(['course'], getDatingCourses);
-  console.log(data);
 
   return (
     <StyledPlace>
