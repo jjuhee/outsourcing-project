@@ -4,13 +4,6 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 function Header() {
-  //로그인 전역관리
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
-  useEffect(() => {
-    console.log('isLoggedIn', isLoggedIn);
-  }, [isLoggedIn]);
-
   const navigate = useNavigate();
   const mainPagesHandler = () => {
     navigate('/');

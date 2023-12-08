@@ -7,17 +7,18 @@ import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 function Signup() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewURL, setPreviewURL] = useState(null);
-
   const navigate = useNavigate();
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewURL, setPreviewURL] = useState(null);
   const [userInfo, setUserInfo] = useState({
     email: '',
     password: '',
     nickname: '',
+    uid: '',
     avatar: ''
   });
+
   const { email, password, nickname, avatar } = userInfo;
 
   const changeUserInfoHandler = (event) => {
@@ -81,7 +82,7 @@ function Signup() {
     }
 
     try {
-      const { email, password, nickname, avatar: avatar } = userInfo;
+      const { email, password, nickname, avatar } = userInfo;
 
       // Firebase Authentication에 회원가입
       const userCredential = await createUserWithEmailAndPassword(
@@ -93,6 +94,7 @@ function Signup() {
       const user = userCredential.user;
 
       let downloadURL;
+
       // 이미지를 Storage에 업로드
       if (selectedFile) {
         const imageRef = ref(
@@ -109,10 +111,12 @@ function Signup() {
         });
       }
 
+      // Firestore에 사용자 정보 추가
       const userDocRef = await addDoc(collection(db, 'users'), {
+        uid: user.uid,
         email: user.email,
-        nickname
-        // avatar: downloadURL
+        nickname,
+        avatar: downloadURL
       });
 
       console.log('User added to Firestore with ID: ', userDocRef.id);

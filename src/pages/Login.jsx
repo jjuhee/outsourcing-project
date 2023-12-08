@@ -21,8 +21,13 @@ function Login() {
     event.preventDefault();
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      dispatch(logIn());
+      const userCredintial = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredintial.user;
+      dispatch(logIn({ uid: user.uid }));
       navigate('/');
     } catch (error) {
       let errorMessage = '에러가 발생했습니다.';
