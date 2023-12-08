@@ -1,46 +1,29 @@
-import { db } from '../../firebase/firebase.config';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { getDatingCourses } from 'api/course';
+import { auth } from '../../firebase/firebase.config';
 import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function CompletedDatingCourse() {
-  const navigate = useNavigate();
-  const [isSearch, setIsSearch] = useState(false);
-  const [courseList, setCourseList] = useState([]);
+  const user = auth.currentUser;
+  console.log(user);
 
-  const naverHandler = () => {
-    navigate('/detail');
-    // const naverMapURL = `https://map.naver.com/p`;
-    // window.open(naverMapURL);
-  };
-
-  const getCourseSnapshot = async () => {
-    // 배열안에 요소가 두번씩 출려돼서 빈배열로 초기화
-    setCourseList([]);
-
-    const courseSnapshot = await getDocs(
-      query(collection(db, 'datingCourse'), orderBy('createAt', 'desc'))
-    );
-    courseSnapshot.forEach((place) => {
-      setCourseList((prevPlace) => [...prevPlace, place]);
-    });
-  };
-
-  useEffect(() => {
-    getCourseSnapshot();
-  }, []);
+  const { isLoading, isError, data } = useQuery(['course'], getDatingCourses);
+  console.log(data);
 
   return (
     <StyledPlace>
       <span>데이트 추천 코스</span>
-      {courseList.map((place) => {
+      {data?.map((place) => {
         return (
           <div style={{ border: '2px solid black' }}>
-            <p>코스명: {place.data().courseTitle}</p>
-            <p>작성날짜: {place.data().createAt}</p>
+            {isLoading && <p>로딩중입니다!</p>}
+            {isError && <p>서버오류 발생!</p>}
+            <p>코스명: {place.courseTitle}</p>
+            <p>작성날짜: {place.createAt}</p>
             <StCourseWrapper>
-              {place.data().place.map((item) => {
+              {place.place.map((item) => {
                 return (
                   <StUl key={item.id}>
                     <StLi>장소이름: {item.place_name}</StLi>
@@ -49,7 +32,6 @@ function CompletedDatingCourse() {
                   </StUl>
                 );
               })}
-              <button onClick={naverHandler}>상세보기</button>
             </StCourseWrapper>
           </div>
         );
