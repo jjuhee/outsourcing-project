@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, storage } from '../../firebase/firebase.config';
+import { storage } from '../../firebase/firebase.config';
 import uuid4 from 'uuid4';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
@@ -7,7 +7,7 @@ import { QueryClient, useMutation } from 'react-query';
 import { addDatingCourse } from 'api/course';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-function MakeDatingCourse({ selectedPlaces }) {
+function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   // 사진 업로드 상태
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedFileNames, setSelectedFileNames] = useState([]);
@@ -17,8 +17,6 @@ function MakeDatingCourse({ selectedPlaces }) {
   const [courseTitle, setCourseTitle] = useState('');
   const uuid = uuid4();
   const TODAY = dayjs().format('YY-MM-DD HH:mm:ss');
-  const user = auth.currentUser;
-  console.log(user);
 
   const queryClient = new QueryClient();
   const mutation = useMutation(addDatingCourse, {
@@ -103,7 +101,8 @@ function MakeDatingCourse({ selectedPlaces }) {
       createAt: TODAY,
       imgUrl: imageUrl
     });
-
+    setSelectedPlaces([]);
+    setCourseTitle('');
     if (mutation.isSuccess) alert('코스가 등록되었습니다!');
   };
 

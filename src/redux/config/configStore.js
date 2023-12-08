@@ -1,8 +1,8 @@
-import course from 'redux/modules/courseSlice';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import auth from '../modules/authSlice';
 
 const rootReducer = combineReducers({
-  course
+  auth
 });
 
 const store = configureStore({

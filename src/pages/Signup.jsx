@@ -3,29 +3,23 @@ import styled from 'styled-components';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db, storage } from '../firebase/firebase.config';
 import { useNavigate } from 'react-router-dom';
-import {
-  addDoc,
-  collection,
-  getDoc,
-  getDocs,
-  query,
-  where
-} from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 function Signup() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewURL, setPreviewURL] = useState(null);
-
   const navigate = useNavigate();
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewURL, setPreviewURL] = useState(null);
   const [userInfo, setUserInfo] = useState({
     email: '',
     password: '',
     nickname: '',
-    avator: ''
+    uid: '',
+    avatar: ''
   });
-  const { email, password, nickname, avator } = userInfo;
+
+  const { email, password, nickname, avatar } = userInfo;
 
   const changeUserInfoHandler = (event) => {
     const { name, value } = event.target;
@@ -79,10 +73,16 @@ function Signup() {
       collection(db, 'users'),
       where('nickname', '==', nickname)
     );
+
     const nicknameSnapshot = await getDocs(nicknameQuery);
 
+    if (!nicknameSnapshot.empty) {
+      alert('이미 사용 중인 닉네임입니다.');
+      return;
+    }
+
     try {
-      const { email, password, nickname, avator } = userInfo;
+      const { email, password, nickname, avatar } = userInfo;
 
       // Firebase Authentication에 회원가입
       const userCredential = await createUserWithEmailAndPassword(
@@ -94,26 +94,29 @@ function Signup() {
       const user = userCredential.user;
 
       let downloadURL;
+
       // 이미지를 Storage에 업로드
       if (selectedFile) {
         const imageRef = ref(
           storage,
           `profileImages/${user.uid}/${selectedFile.name}`
         );
-        console.log(imageRef);
+
         await uploadBytes(imageRef, selectedFile);
         downloadURL = await getDownloadURL(imageRef);
-        console.log({ downloadURL });
+
         // 사용자 정보에 프로필 이미지 URL 추가
         await updateProfile(user, {
           photoURL: downloadURL
         });
       }
-      
+
+      // Firestore에 사용자 정보 추가
       const userDocRef = await addDoc(collection(db, 'users'), {
+        uid: user.uid,
         email: user.email,
         nickname,
-        avator: downloadURL
+        avatar: downloadURL
       });
 
       console.log('User added to Firestore with ID: ', userDocRef.id);
@@ -139,7 +142,7 @@ function Signup() {
     }
 
     setSelectedFile(file);
-  }
+  };
 
   const loginPageHandler = () => {
     navigate('/login');
@@ -175,6 +178,7 @@ function Signup() {
             type="text"
             id="nickname"
             name="nickname"
+            value={userInfo.nickname}
             onChange={changeUserInfoHandler}
             placeholder="닉네임을 작성해주세요 (1~10글자)"
             minLength={1}
