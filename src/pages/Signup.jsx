@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../firebase/firebase.config';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth, db, storage } from '../firebase/firebase.config';
 import { useNavigate } from 'react-router-dom';
 import {
   addDoc,
@@ -11,8 +11,13 @@ import {
   query,
   where
 } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 function Signup() {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewURL, setPreviewURL] = useState(null);
+
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
@@ -89,10 +94,27 @@ function Signup() {
       // Firebase Firestore에 사용자 정보 추가
       const user = userCredential.user;
 
+      let downloadURL;
+      // 이미지를 Storage에 업로드
+      if (selectedFile) {
+        const imageRef = ref(
+          storage,
+          `profileImages/${user.uid}/${selectedFile.name}`
+        );
+        console.log(imageRef);
+        await uploadBytes(imageRef, selectedFile);
+        downloadURL = await getDownloadURL(imageRef);
+        console.log({ downloadURL });
+        // 사용자 정보에 프로필 이미지 URL 추가
+        await updateProfile(user, {
+          photoURL: downloadURL
+        });
+      }
+      
       const userDocRef = await addDoc(collection(db, 'users'), {
         email: user.email,
         nickname,
-        avator
+        avator: downloadURL
       });
 
       console.log('User added to Firestore with ID: ', userDocRef.id);
@@ -104,6 +126,20 @@ function Signup() {
       console.error(error);
     }
   };
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+
+    // 선택한 파일의 미리보기를 생성
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewURL(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    setSelectedFile(file);
 
   const loginPageHandler = () => {
     navigate('/login');
@@ -144,6 +180,18 @@ function Signup() {
             minLength={1}
             maxLength={10}
           />
+          <SignupProfileImg htmlFor="profileImg">
+            프로필 이미지 업로드
+          </SignupProfileImg>
+          {previewURL && (
+            <ImagePreview src={previewURL} alt="프로필 이미지 미리보기" />
+          )}
+          <ImgeInput
+            type="file"
+            accept="image/*"
+            id="profileImg"
+            onChange={handleFileSelect}
+          />
         </div>
         <div>
           <SignupButton onClick={onSignupHandler}>가입하기</SignupButton>
@@ -159,17 +207,30 @@ export default Signup;
 const SignupInput = styled.input`
   background-color: #ffe7cf;
   width: 100%;
-  /* outline: none; */
-  /* border: none;
-  border-radius: 0.5rem; */
 `;
+
 const SignupButton = styled.button`
-  /* background-color: gray; */
   width: 10vw;
   height: 5vh;
   border-radius: 2px;
 `;
+
 const ImgeInput = styled.input`
   background-color: #ffe7cf;
   width: 100%;
+  display: none;
+`;
+
+const SignupProfileImg = styled.label`
+  margin: 5px 0 20px 0;
+  font-weight: bold;
+  font-size: 13px;
+  color: #0095f6;
+  display: inline-block;
+  cursor: pointer;
+`;
+
+const ImagePreview = styled.img`
+  width: 100%;
+  max-height: 200px;
 `;
