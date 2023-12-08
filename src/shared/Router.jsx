@@ -7,7 +7,7 @@ import DetailPages from 'pages/DetailPages';
 import Profile from 'pages/Profile';
 import GlobalStyle from 'styles/GlobalStyle';
 import GlobalColor from 'styles/GlobalColor';
-import Layout from './Layout';
+import Layout from '../layouts/Layout';
 
 function Router() {
   return (
