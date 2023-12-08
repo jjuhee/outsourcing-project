@@ -1,23 +1,41 @@
-import React, { useState } from 'react';
+import { getDatingCourses } from 'api/course';
+import { auth } from '../../firebase/firebase.config';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function CompletedDatingCourse() {
-  const navigate = useNavigate();
-  const [isSearch, setIsSearch] = useState(false);
-  const naverHandler = () => {
-    navigate('/detail');
-    // const naverMapURL = `https://map.naver.com/p`;
-    // window.open(naverMapURL);
-  };
+  const user = auth.currentUser;
+  console.log(user);
+
+  const { isLoading, isError, data } = useQuery(['course'], getDatingCourses);
+  console.log(data);
+
   return (
     <StyledPlace>
       <span>데이트 추천 코스</span>
-      <div>코스명</div>
-      <div>코스1</div>
-      <div>코스2</div>
-      <div>코스3</div>
-      <button onClick={naverHandler}>상세보기</button>
+      {data?.map((place) => {
+        return (
+          <div style={{ border: '2px solid black' }}>
+            {isLoading && <p>로딩중입니다!</p>}
+            {isError && <p>서버오류 발생!</p>}
+            <p>코스명: {place.courseTitle}</p>
+            <p>작성날짜: {place.createAt}</p>
+            <StCourseWrapper>
+              {place.place.map((item) => {
+                return (
+                  <StUl key={item.id}>
+                    <StLi>장소이름: {item.place_name}</StLi>
+                    <StLi>카테고리: {item.category_name}</StLi>
+                    <StLi>주소: {item.address_name}</StLi>
+                  </StUl>
+                );
+              })}
+            </StCourseWrapper>
+          </div>
+        );
+      })}
     </StyledPlace>
   );
 }
@@ -33,3 +51,11 @@ const StyledPlace = styled.div`
     font-size: 40px;
   }
 `;
+
+const StCourseWrapper = styled.div``;
+
+const StUl = styled.ul`
+  border: 2px solid yellow;
+`;
+
+const StLi = styled.li``;
