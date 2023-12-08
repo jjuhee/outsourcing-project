@@ -2,11 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function DetailPages() {
+  //myLocation 상태 변동되게 useState로 관리
   const [myLocation, setMyLocation] = useState('');
+  //지도를 나타내는 DOM요소에 대한 참조
   const mapRef = useRef(null);
+  //naver window에서 가져옴
   const { naver } = window;
 
   useEffect(() => {
+    //mapRef와 naver가 존
     if (!mapRef.current || !naver) return;
 
     const mapOptions = {
