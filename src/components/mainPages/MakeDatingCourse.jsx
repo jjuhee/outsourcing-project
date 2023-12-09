@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { storage } from '../../firebase/firebase.config';
 import uuid4 from 'uuid4';
 import dayjs from 'dayjs';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { QueryClient, useMutation } from 'react-query';
 import { addDatingCourse } from 'api/course';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -122,92 +122,163 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
 
   return (
     <>
-      <StDateCourseWrapper>
-        <StDateTitle>데이트코스</StDateTitle>
-        {selectedPlaces.map((place) => {
-          return (
-            <StDatingListContainer key={place.id}>
-              <li>
+      <StyledDateCourseWrapper>
+        <StyledDateTitle>데이트코스 등록 💟</StyledDateTitle>
+        <div>
+          {selectedPlaces.map((place) => {
+            return (
+              <StyledDatingListContainer key={place.id}>
                 <span>{place.place_name}</span>
-              </li>
-              <li>{place.category_name}</li>
-              <li>{place.phone ? place.phone : ''}</li>
-              <li>{place.place_url}</li>
-            </StDatingListContainer>
-          );
-        })}
+                <p>{place.category_name}</p>
+                <p>{place.phone ? place.phone : ''}</p>
+                <p>{place.place_url}</p>
+              </StyledDatingListContainer>
+            );
+          })}
+        </div>
 
-        <StFileWrapper>
-          <label htmlFor="file-upload" className="custom-file-upload">
+        {/* <StyledFileWrapper> */}
+        {/* <label htmlFor="file-upload" className="custom-file-upload">
             장소: 파일 첨부
-          </label>
-          <input
-            id="file-upload"
-            type="file"
-            onChange={handleFileSelect}
-            style={{ display: 'none' }}
-            multiple
-          />
-          {selectedFileNames && (
-            <StSelectedFileWrapper>
-              {previewUrls.length > 0 && renderSelectedFilePreviews()}
-            </StSelectedFileWrapper>
-          )}
-        </StFileWrapper>
+          </label> */}
+        <StyledInput
+          id="file-upload"
+          type="file"
+          onChange={handleFileSelect}
+          style={{ display: 'none' }}
+          multiple
+        />
+        {selectedFileNames && (
+          <StSelectedFileWrapper>
+            {previewUrls.length > 0 && renderSelectedFilePreviews()}
+          </StSelectedFileWrapper>
+        )}
+        {/* </StyledFileWrapper> */}
 
-        <StDateForm onSubmit={onClickCourseSaveButtonHandler}>
+        <StyledDateForm onSubmit={onClickCourseSaveButtonHandler}>
           <label htmlFor="courseTitle"></label>
           <input
             type="text"
             id="courseTitle"
             value={courseTitle}
             onChange={onTitleChange}
-            placeholder="코스이름을 입력해주세요"
+            placeholder="코스 이름을 입력해주세요"
           />
-          <StCourseSaveButton type="submit">저장</StCourseSaveButton>
-        </StDateForm>
-      </StDateCourseWrapper>
+          <StyledCourseSaveButton type="submit">저장</StyledCourseSaveButton>
+        </StyledDateForm>
+      </StyledDateCourseWrapper>
     </>
   );
 }
 
 export default MakeDatingCourse;
 
-const StDateTitle = styled.div`
-  height: 25px;
-`;
-const StDateCourseWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  font-size: 0.9rem;
-  width: 350px;
+const StyledDateCourseWrapper = styled.div`
+  background-image: url(/dateCourseContainer.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 460px;
+  border: none;
   height: 700px;
-  border: 1px solid black;
 `;
 
-const StDatingListContainer = styled.ul`
-  margin: 5px;
-  padding: 5px;
-  height: 100px;
-  border: 1px solid black;
+const shakeAnimation = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+  100% {
+    transform: translateX(3px);
+  }
+`;
+
+const StyledDateTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+  margin-top: 110px;
+  color: var(--date-course-title);
+  animation: ${shakeAnimation} 1.4s ease infinite;
+`;
+
+const StyledDatingListContainer = styled.div`
+  margin-left: 35px;
+  margin-top: 25px;
+  margin-bottom: 70px;
+  //파일첨부 구현되면 수정해야함
+  height: 70px;
   border-radius: 10px;
   & span {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 7px;
   }
-  & li {
-    font-size: 0.7rem;
+  & p {
+    font-size: 1rem;
+    margin-top: 10px;
   }
 `;
 
-const StDateForm = styled.form`
+// const StyledFileWrapper = styled.form`
+//   input {
+//     margin-left: 50px;
+//   }
+//   .custom-file-upload {
+//     background-color: var(--mainOrange);
+//     border: 2px solid var(--mainOrange);
+//     display: inline-block;
+//     padding: 6px 12px;
+//     cursor: pointer;
+//     border-radius: 0.5vh;
+//     transition: background-color 0.3s ease;
+//   }
+//   .custom-file-upload:hover {
+//     background-color: transparent;
+//   }
+// `;
+
+const StyledInput = styled.input`
+  margin-left: 20px;
+`;
+
+const StyledDateForm = styled.form`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: auto;
+  margin-left: 15px;
   margin-bottom: 20px;
+  input {
+    font-size: 23px;
+    text-align: center;
+    width: 300px;
+    height: 35px;
+    border: 1.5px solid black;
+    border-radius: 50px;
+    background-color: var(--search-input-background-color);
+  }
 `;
 
-const StCourseSaveButton = styled.button``;
+const StyledCourseSaveButton = styled.button`
+  margin-right: 33px;
+  font-size: 20px;
+  background-image: url(/addCourseButton.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 115px;
+  height: 70px;
+  border: none;
+`;
 
 const StSelectedFileWrapper = styled.div`
   margin-top: 1vh;
@@ -224,22 +295,4 @@ const StImagePreview = styled.img`
   margin-top: 10px;
   max-width: 100%;
   max-height: 100%;
-`;
-
-const StFileWrapper = styled.div`
-  margin-left: 2.5vh;
-  margin-top: 1vh;
-  text-align: start;
-  .custom-file-upload {
-    background-color: var(--mainOrange);
-    border: 2px solid var(--mainOrange);
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 0.5vh;
-    transition: background-color 0.3s ease;
-  }
-  .custom-file-upload:hover {
-    background-color: transparent;
-  }
 `;

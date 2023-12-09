@@ -15,7 +15,11 @@ function Header() {
   return (
     <>
       <StyledBtn>
-        <span>커플 더플 (Couple The Place)</span>
+        <StyledTitle>
+          <StyledImg />
+          <span>커플 더플 (Couple The Place)</span>
+        </StyledTitle>
+
         <div>
           <HomeButton onClick={mainPagesHandler} />
           <ProfileButton onClick={profileHandler} />
@@ -31,10 +35,6 @@ const StyledBtn = styled.div`
   align-items: center;
   background-color: var(--header-color);
   padding: 20px;
-  span {
-    font-size: 30px;
-    margin-left: 300px;
-  }
   div {
     display: flex;
     margin-right: 300px;
@@ -43,9 +43,9 @@ const StyledBtn = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 22px;
-    width: 60px;
-    height: 60px;
+    margin-left: 30px;
+    width: 65px;
+    height: 65px;
     border: 2px solid var(--header-button-border);
     border-radius: 50%;
     cursor: pointer;
@@ -55,14 +55,34 @@ const StyledBtn = styled.div`
   }
 `;
 
-const HomeButton = styled.button`
-  background-image: url(/homeIcon.jpg);
-  background-size: cover;
+const StyledTitle = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  margin-left: 300px;
+  color: var(--header-font-color);
 `;
 
-export default Header;
+const StyledImg = styled.img`
+  background-image: url(/titleLogo.png);
+  background-size: cover;
+  width: 130px;
+  height: 130px;
+  border: 0px;
+  border-radius: 50%;
+`;
+
+const HomeButton = styled.button`
+  background-image: url(/homeIcon.jpg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
 
 const ProfileButton = styled.button`
   background-image: url(/profileImage.png);
   background-size: cover;
 `;
+
+export default Header;
