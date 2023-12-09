@@ -12,9 +12,6 @@ import { useSelector } from 'react-redux';
 
 function Router() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const c = useSelector((state) => state.auth.uid);
-  console.log(c);
-  console.log(isLoggedIn);
 
   return (
     <>

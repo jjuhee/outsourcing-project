@@ -68,58 +68,75 @@ function MapSearch() {
   };
 
   return (
-    <StMapSearch>
+    <>
       <MyMap markers={markers} setMap={setMap} />
-
-      <StSearchBox>
-        <form onSubmit={searchPlaceHandler}>
-          <input
-            type="text"
-            placeholder="장소를 입력해주세요"
-            value={inputTitle}
-            onChange={inputTitleHandler}
-          />
-          <button type="submit">검색</button>
-        </form>
-
-        <StListArea>
+      <StyledMapContainer>
+        <StyledMap></StyledMap>
+        <StyledSearchBox onSubmit={searchPlaceHandler}>
+          <StyledPlaceInputButton>
+            <input
+              type="text"
+              placeholder="장소를 입력해주세요"
+              value={inputTitle}
+              onChange={inputTitleHandler}
+            />
+            <button type="submit">🔍</button>
+          </StyledPlaceInputButton>
           {places ? (
             places.map((place) => {
               return (
-                <StArea key={place.id}>
-                  <StTitle>{place.place_name}</StTitle>
-                  <StP>{place.road_address_name}</StP>
-                  <StP>{place.phone}</StP>
+                <div key={place.id}>
+                  <div>{place.place_name}</div>
+                  <div>{place.road_address_name}</div>
+                  <div>{place.phone}</div>
                   <StUrl href={place.place_url}>{place.place_url}</StUrl>
-                  <StButton onClick={() => clickAddCourseHandler(place)}>
+                  <button onClick={() => clickAddCourseHandler(place)}>
                     코스로 추가
-                  </StButton>
-                </StArea>
+                  </button>
+                </div>
               );
             })
           ) : (
             <p>검색을 해주세요</p>
           )}
-        </StListArea>
-      </StSearchBox>
+        </StyledSearchBox>
+      </StyledMapContainer>
       <MakeDatingCourse selectedPlaces={selectedPlaces} />
-    </StMapSearch>
+    </>
   );
 }
 
 export default MapSearch;
 
-const StMapSearch = styled.div`
-  margin-top: 20px;
+const StyledMapContainer = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  margin: 40px auto;
+  background-image: url('/map.jpg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 1330px;
 `;
 
-const StSearchBox = styled.div`
+const StyledMap = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 115px;
+  margin-right: 40px;
+  margin-left: 200px;
+  width: 300px;
+  height: 300px;
+  z-index: 10;
+`;
+
+const StyledSearchBox = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  margin-top: 50px;
+  font-size: 20px;
   & input {
     height: 25px;
     padding: 5px;
@@ -131,33 +148,51 @@ const StSearchBox = styled.div`
   }
 `;
 
-const StListArea = styled.div`
-  overflow-y: scroll;
-  font-size: 0.9rem;
-  width: 250px;
-  height: 400px;
-  border: 1px solid black;
-`;
-
-const StArea = styled.div`
-  margin: 5px;
-  padding: 5px;
-  height: 100px;
-  border: 1px solid black;
-  border-radius: 10px;
-  & p {
-    margin-bottom: 2px;
+const StyledPlaceInputButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 170px;
+  input {
+    width: 450px;
+    height: 40px;
+    font-size: 30px;
+    text-align: center;
+    margin-right: 20px;
+    border: 1.5px solid black;
+    border-radius: 50px;
+    background-color: var(--search-input-background-color);
+  }
+  button {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    background-color: var(--search-button);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
   }
 `;
 
-const StTitle = styled.div`
-  font-weight: 600;
-  margin-bottom: 7px;
-`;
+// const StArea = styled.div`
+//   margin: 5px;
+//   padding: 5px;
+//   height: 100px;
+//   border: 1px solid black;
+//   border-radius: 10px;
+//   & p {
+//     margin-bottom: 2px;
+//   }
+// `;
 
-const StP = styled.p`
-  font-size: 0.7rem;
-`;
+// const StTitle = styled.div`
+//   font-weight: 600;
+//   margin-bottom: 7px;
+// `;
+
+// const StP = styled.p`
+//   font-size: 0.7rem;
+// `;
 
 const StUrl = styled.a`
   font-size: 0.6rem;

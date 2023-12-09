@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword
-} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase.config';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logIn } from '../redux/modules/authSlice';
+import { Link } from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
@@ -27,7 +24,8 @@ function Login() {
         password
       );
       const user = userCredintial.user;
-      dispatch(logIn({ uid: user.uid }));
+      dispatch(logIn({ uid: user.uid, nickname: user.nickname }));
+      alert('로그인 성공!');
       navigate('/');
     } catch (error) {
       let errorMessage = '에러가 발생했습니다.';
@@ -50,9 +48,12 @@ function Login() {
   };
 
   return (
-    <>
-      <form>
-        <p>로그인</p>
+    <StyledLogin>
+      <StyledImg>
+        <p>Couple The Place</p>
+      </StyledImg>
+      <StyledForm>
+        <p>Log in</p>
         <div>
           <LoginInput
             type="email"
@@ -60,7 +61,7 @@ function Login() {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-            placeholder="아이디를 작성해주세요"
+            placeholder="Email"
           />
           <LoginInput
             type="password"
@@ -68,36 +69,87 @@ function Login() {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-            placeholder="암호를 작성해주세요"
+            placeholder="Password"
           />
         </div>
-        <div>
-          <LoginButton onClick={signIn}>로그인</LoginButton>
-          <LoginButton
-            onClick={() => {
-              navigate('/signup');
-            }}
-          >
-            회원가입페이지
-          </LoginButton>
-        </div>
-      </form>
-    </>
+
+        <LoginButton onClick={signIn}>로그인</LoginButton>
+        <GotoPasswordPage to="/signup">회원가입페이지</GotoPasswordPage>
+      </StyledForm>
+    </StyledLogin>
   );
 }
 
 export default Login;
 
-const LoginInput = styled.input`
-  background-color: #ffe7cf;
-  width: 100%;
-  /* outline: none; */
-  /* border: none;
-  border-radius: 0.5rem; */
+const StyledLogin = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--login-signup-background-color);
 `;
+
+const StyledImg = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/loginPage.jpg');
+  background-size: cover;
+  background-position: center bottom -20px;
+  width: 500px;
+  height: 500px;
+  font-size: 45px;
+  p {
+    padding-top: 250px;
+  }
+`;
+
+const StyledForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 500px;
+  height: 500px;
+  background-color: var(--login-signup-input-background-color);
+  p {
+    font-size: 40px;
+    padding: 20px;
+    width: 80%;
+  }
+`;
+
+const LoginInput = styled.input`
+  width: 80%;
+  border: none;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--login-signup-input-bottom);
+  margin-top: 20px;
+  background-color: transparent;
+`;
+
 const LoginButton = styled.button`
-  /* background-color: gray; */
   width: 10vw;
-  height: 5vh;
-  border-radius: 2px;
+  height: 4vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 40%;
+  margin-top: 20px;
+  align-self: center;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
+`;
+
+const GotoPasswordPage = styled(Link)`
+  background: none;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  text-decoration: underline;
 `;

@@ -4,7 +4,10 @@ import { Map, MapMarker, Polyline, useKakaoLoader } from 'react-kakao-maps-sdk';
 function MyMap({ markers, setMap, enableDrawing = false }) {
   //useKakaoLoader();
 
-  console.log(markers.map((marker) => marker.position));
+  console.log(
+    '1',
+    markers.map((marker) => marker.position)
+  );
   return (
     <div>
       <Map // 로드뷰를 표시할 Container
@@ -13,7 +16,7 @@ function MyMap({ markers, setMap, enableDrawing = false }) {
           lng: 126.9786567
         }}
         style={{
-          width: '440px',
+          width: '633px',
           height: '440px'
         }}
         level={3}
