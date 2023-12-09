@@ -16,8 +16,8 @@ function MyMap({ markers, setMap, enableDrawing = false }) {
           lng: 126.9786567
         }}
         style={{
-          width: '633px',
-          height: '440px'
+          width: '332px',
+          height: '232.2px'
         }}
         level={3}
         onCreate={setMap}

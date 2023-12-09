@@ -1,6 +1,5 @@
 import CompletedDatingCourse from 'components/mainPages/CompletedDatingCourse';
 import MapSearch from 'components/mainPages/MapSearch';
-import SearchResult from 'components/mainPages/SearchResult';
 import React from 'react';
 import ShowMapWidthLine from 'components/mainPages/ShowMapsWithLine';
 import styled from 'styled-components';
@@ -9,11 +8,9 @@ function MainPages() {
   return (
     <MainContainer>
       <GifBackground src="/background.gif" alt="animatedBackground" />
-      {/* <Content> */}
       <MapSearch />
       <CompletedDatingCourse />
       <ShowMapWidthLine />
-      {/* </Content> */}
     </MainContainer>
   );
 }
@@ -32,10 +29,6 @@ const GifBackground = styled.img`
   height: 100%;
   object-fit: cover;
   z-index: -1;
-`;
-
-const Content = styled.div`
-  z-index: 1;
 `;
 
 export default MainPages;

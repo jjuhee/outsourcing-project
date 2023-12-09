@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import MakeDatingCourse from './MakeDatingCourse';
 import MyMap from './MyMap';
+import CompletedDatingCourse from './CompletedDatingCourse';
 
 function MapSearch() {
   const [inputTitle, setInputTitle] = useState('');
@@ -68,95 +69,78 @@ function MapSearch() {
   };
 
   return (
-    <>
-      <MyMap markers={markers} setMap={setMap} />
+    <StyledMapSearchCourseContainer>
       <StyledMapContainer>
-        <StyledMap></StyledMap>
-        <StyledSearchBox onSubmit={searchPlaceHandler}>
-          <StyledPlaceInputButton>
-            <input
-              type="text"
-              placeholder="장소를 입력해주세요"
-              value={inputTitle}
-              onChange={inputTitleHandler}
-            />
-            <button type="submit">🔍</button>
-          </StyledPlaceInputButton>
-          {places ? (
-            places.map((place) => {
-              return (
-                <div key={place.id}>
-                  <div>{place.place_name}</div>
-                  <div>{place.road_address_name}</div>
-                  <div>{place.phone}</div>
-                  <StUrl href={place.place_url}>{place.place_url}</StUrl>
-                  <button onClick={() => clickAddCourseHandler(place)}>
-                    코스로 추가
-                  </button>
-                </div>
-              );
-            })
-          ) : (
-            <p>검색을 해주세요</p>
-          )}
-        </StyledSearchBox>
+        <StyledMap>
+          <MyMap markers={markers} setMap={setMap} />
+        </StyledMap>
+        <StyledPlaceInputButton>
+          <input
+            type="text"
+            placeholder="장소를 입력해주세요"
+            value={inputTitle}
+            onChange={inputTitleHandler}
+          />
+          <button type="submit">🔍</button>
+        </StyledPlaceInputButton>
+        <StyledSearchContainer>
+          {places.map((place) => {
+            return (
+              <StyledDateCourseMaking key={place.id}>
+                <StyledTitle>{place.place_name}</StyledTitle>
+                <div>{place.road_address_name}</div>
+                <div>{place.phone}</div>
+                {/* <StUrl href={place.place_url}>{place.place_url}</StUrl> */}
+                <button onClick={() => clickAddCourseHandler(place)}>
+                  코스로 추가
+                </button>
+              </StyledDateCourseMaking>
+            );
+          })}
+        </StyledSearchContainer>
       </StyledMapContainer>
+      <ArrowImg />
       <MakeDatingCourse selectedPlaces={selectedPlaces} />
-    </>
+    </StyledMapSearchCourseContainer>
   );
 }
 
 export default MapSearch;
 
+const StyledMapSearchCourseContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const StyledMapContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 40px auto;
+  margin: 20px;
   background-image: url('/map.jpg');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  height: 1330px;
+  height: 700px;
+  width: 600px;
 `;
 
 const StyledMap = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 115px;
-  margin-right: 40px;
-  margin-left: 200px;
-  width: 300px;
-  height: 300px;
-  z-index: 10;
+  margin-top: 60px;
+  margin-right: 17.5px;
+  margin-bottom: 116px;
 `;
 
-const StyledSearchBox = styled.form`
+const StyledPlaceInputButton = styled.form`
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  margin-top: 50px;
-  font-size: 20px;
-  & input {
-    height: 25px;
-    padding: 5px;
-    font-size: 0.9rem;
-  }
-  & form > button {
-    border-radius: 10px;
-    height: 25px;
-  }
-`;
-
-const StyledPlaceInputButton = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 170px;
+  margin-left: 139px;
   input {
-    width: 450px;
-    height: 40px;
-    font-size: 30px;
+    width: 250px;
+    height: 25px;
+    font-size: 20px;
     text-align: center;
     margin-right: 20px;
     border: 1.5px solid black;
@@ -164,40 +148,55 @@ const StyledPlaceInputButton = styled.div`
     background-color: var(--search-input-background-color);
   }
   button {
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     font-size: 20px;
     background-color: var(--search-button);
-    border: none;
     border-radius: 50%;
+    text-align: center;
+    padding-left: 3px;
     cursor: pointer;
   }
 `;
 
-// const StArea = styled.div`
-//   margin: 5px;
-//   padding: 5px;
-//   height: 100px;
-//   border: 1px solid black;
-//   border-radius: 10px;
-//   & p {
-//     margin-bottom: 2px;
-//   }
-// `;
-
-// const StTitle = styled.div`
-//   font-weight: 600;
-//   margin-bottom: 7px;
-// `;
-
-// const StP = styled.p`
-//   font-size: 0.7rem;
-// `;
-
-const StUrl = styled.a`
-  font-size: 0.6rem;
-  color: #2eaee3;
-  margin-bottom: 7px;
+const StyledSearchContainer = styled.div`
+  height: 350px;
+  width: 490px;
+  max-height: 180px;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;
 
-const StButton = styled.button``;
+const StyledDateCourseMaking = styled.div`
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 330px;
+  padding-bottom: 20px;
+  margin-top: 10px;
+  margin-left: 139px;
+  line-height: 1.3;
+  div {
+    display: flex;
+    margin-bottom: 4px;
+  }
+  button {
+    margin-left: 190px;
+  }
+`;
+
+const StyledTitle = styled.div`
+  font-weight: bold;
+`;
+
+const ArrowImg = styled.img`
+  background-image: url('/arrow.png');
+  background-size: cover;
+  background-position: center;
+  width: 90px;
+  height: 110px;
+  border-radius: 50px;
+  margin-right: 30px;
+`;

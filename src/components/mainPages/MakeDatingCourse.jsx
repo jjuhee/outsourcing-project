@@ -44,8 +44,8 @@ function MakeDatingCourse({ selectedPlaces }) {
 
   return (
     <div>
-      <StTitle>데이트코스</StTitle>
       <StDateCourseBox>
+        <StTitle>데이트코스</StTitle>
         {selectedPlaces.map((place) => {
           return (
             <StUl key={place.id}>
@@ -85,8 +85,8 @@ const StDateCourseBox = styled.div`
   flex-direction: column;
   text-align: center;
   font-size: 0.9rem;
-  width: 250px;
-  height: 400px;
+  width: 350px;
+  height: 700px;
   border: 1px solid black;
 `;
 

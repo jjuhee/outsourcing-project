@@ -4,6 +4,7 @@ const GlobalColor = createGlobalStyle`
   :root {
     --header-color:#e79992;
     --header-button-color:#ff5f5f;
+    --header-button-border:#ff5151;
     --login-signup-background-color:#f9e8e6;
     --login-signup-input-background-color:	#add8e6;
     --login-signup-input-bottom:#c0827b;
