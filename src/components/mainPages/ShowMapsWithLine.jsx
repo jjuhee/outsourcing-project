@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import profileImg from 'assets/happy-couple-facing-each-other-260nw-2122589009.webp';
 
 function ShowMapWidthLine() {
   const { id } = useParams();
@@ -121,8 +122,13 @@ function ShowMapWidthLine() {
       {courseCurrentData?.map((course) => {
         return (
           <StCourse key={course.courseUid}>
-            <p>{course.courseTitle}</p>
+            <h3>{course.courseTitle}</h3>
             <p>{course.createAt}</p>
+            <p>작성날짜: {course.createAt}</p>
+            <p>작성한사람</p>
+            <StProfileImgContainer>
+              <image src={`${profileImg}`} alt="프로필 이미지" />
+            </StProfileImgContainer>
             <button onClick={() => courseClickHandler(course.courseUid)}>
               코스보기
             </button>
@@ -154,5 +160,7 @@ const StCourse = styled.div`
     cursor: pointer;
   }
 `;
+
+const StProfileImgContainer = styled.div``;
 
 const StCourseList = styled.div``;
