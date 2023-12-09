@@ -1,7 +1,6 @@
 import CompletedDatingCourse from 'components/mainPages/CompletedDatingCourse';
 import MapSearch from 'components/mainPages/MapSearch';
 import React from 'react';
-import ShowMapWidthLine from 'components/mainPages/ShowMapsWithLine';
 import styled from 'styled-components';
 
 function MainPages() {
@@ -10,7 +9,6 @@ function MainPages() {
       <GifBackground src="/background.gif" alt="animatedBackground" />
       <MapSearch />
       <CompletedDatingCourse />
-      <ShowMapWidthLine />
     </MainContainer>
   );
 }

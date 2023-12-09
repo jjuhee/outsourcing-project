@@ -23,7 +23,7 @@ function Router() {
             <>
               <Route element={<Layout />}>
                 <Route path="/" element={<MainPages />} />
-                <Route path="/detail" element={<DetailPages />} />
+                <Route path="/detail/:id" element={<DetailPages />} />
                 <Route path="/profile" element={<Profile />} />
               </Route>
             </>

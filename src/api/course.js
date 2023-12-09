@@ -2,6 +2,7 @@ import { db } from '../firebase/firebase.config';
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   orderBy,
   query,

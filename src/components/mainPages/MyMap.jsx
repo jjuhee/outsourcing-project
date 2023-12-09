@@ -4,10 +4,6 @@ import { Map, MapMarker, Polyline, useKakaoLoader } from 'react-kakao-maps-sdk';
 function MyMap({ markers, setMap, enableDrawing = false }) {
   //useKakaoLoader();
 
-  console.log(
-    '1',
-    markers.map((marker) => marker.position)
-  );
   return (
     <div>
       <Map // 로드뷰를 표시할 Container

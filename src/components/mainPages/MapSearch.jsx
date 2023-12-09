@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import MakeDatingCourse from './MakeDatingCourse';
 import MyMap from './MyMap';
-import CompletedDatingCourse from './CompletedDatingCourse';
 
 function MapSearch() {
   const [inputTitle, setInputTitle] = useState('');
@@ -74,7 +73,7 @@ function MapSearch() {
         <StyledMap>
           <MyMap markers={markers} setMap={setMap} />
         </StyledMap>
-        <StyledPlaceInputButton>
+        <StyledPlaceInputButton onSubmit={searchPlaceHandler}>
           <input
             type="text"
             placeholder="장소를 입력해주세요"
