@@ -28,7 +28,7 @@ function CompletedDatingCourse() {
             <StWriteDay>작성날짜: {course.createAt}</StWriteDay>
             <StWriter>작성한사람</StWriter>
             <StProfileImgContainer>
-              <image src={`${profileImg}`} alt="프로필 이미지" />
+              <img src={`${profileImg}`} alt="프로필 이미지" />
             </StProfileImgContainer>
             <StCourseDetailButton
               onClick={() => goToDetailButtonHandler(course.courseUid)}
@@ -82,7 +82,12 @@ const StWriteDay = styled.p``;
 
 const StWriter = styled.p``;
 
-const StProfileImgContainer = styled.div``;
+const StProfileImgContainer = styled.div`
+  img {
+    border-radius: 50%;
+    height: 80px;
+  }
+`;
 
 const StCourseContainer = styled.div`
   display: flex;

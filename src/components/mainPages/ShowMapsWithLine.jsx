@@ -127,7 +127,7 @@ function ShowMapWidthLine() {
             <p>작성날짜: {course.createAt}</p>
             <p>작성한사람</p>
             <StProfileImgContainer>
-              <image src={`${profileImg}`} alt="프로필 이미지" />
+              <img src={`${profileImg}`} alt="프로필 이미지" />
             </StProfileImgContainer>
             <button onClick={() => courseClickHandler(course.courseUid)}>
               코스보기
@@ -153,7 +153,7 @@ export default ShowMapWidthLine;
 
 const StCourse = styled.div`
   width: 550px;
-  height: 300px;
+  height: 400px;
   border: 1px solid green;
 
   button {
@@ -161,6 +161,11 @@ const StCourse = styled.div`
   }
 `;
 
-const StProfileImgContainer = styled.div``;
+const StProfileImgContainer = styled.div`
+  img {
+    border-radius: 50%;
+    height: 80px;
+  }
+`;
 
 const StCourseList = styled.div``;
