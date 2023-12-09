@@ -9,7 +9,6 @@ function CompletedDatingCourse() {
   const { isLoading, isError, data } = useQuery(['course'], getDatingCourses);
   const navigate = useNavigate();
 
-  console.log(data);
   const goToDetailButtonHandler = (uid) => {
     navigate(`/detail/${uid}`);
   };
