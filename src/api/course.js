@@ -2,6 +2,7 @@ import { db } from '../firebase/firebase.config';
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
@@ -19,13 +20,25 @@ const getDatingCourses = async () => {
   return initialCourses;
 };
 
+const getDatingCourseDetail = async () => {
+  const courseRef = doc(db, 'datingCourse', 'courseUid');
+  const courseSnapshot = await getDoc(courseRef);
+
+  if (courseSnapshot.exists()) {
+    console.log('Document data:', courseSnapshot.data());
+  } else {
+    // docSnap.data() will be undefined in this case
+    console.log('No such document!');
+  }
+};
+
 const addDatingCourse = async (newDatingCourse) => {
   const courseApplyRef = collection(db, 'datingCourse');
   const newDocRef = doc(courseApplyRef);
   await setDoc(newDocRef, { ...newDatingCourse, courseUid: newDocRef.id });
 };
 
-export { getDatingCourses, addDatingCourse };
+export { getDatingCourses, addDatingCourse, getDatingCourseDetail };
 
 //   try {
 //     await setDoc(newDocRef, {

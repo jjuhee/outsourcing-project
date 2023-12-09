@@ -1,5 +1,7 @@
+import { getDatingCourseDetail } from 'api/course';
 import MyMap from 'components/mainPages/MyMap';
 import React, { useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
 function ShowMapWidthLine() {
@@ -8,12 +10,14 @@ function ShowMapWidthLine() {
   const { kakao } = window;
 
   // 1. 아니면
-  // const queryClient = useQueryClient();
-  // const courseData = queryClient.getQueryData(["course"]);
+  const queryClient = useQueryClient();
+  const courseData = queryClient.getQueryData(
+    ['course'],
+    getDatingCourseDetail
+  );
 
-  //2. 유즈쿼리
-
-  // const { isLoading, isError, refetch, data } = useQuery(
+  // 2. 유즈쿼리
+  // const { isLoading, isError, refetch } = useQuery(
   //   ['course', { local: inputTitle }],
   //   getCourse,
   //   { enabled: false, select: (local) => local.items }
@@ -95,7 +99,15 @@ function ShowMapWidthLine() {
   return (
     <>
       <MyMap markers={markers} setMap={setMap} enableDrawing />
-      <StCourse onClick={courseClickHandler}> 코스 div </StCourse>
+
+      {courseData.map((course) => {
+        return (
+          <StCourse key={course.id} onClick={courseClickHandler}>
+            <p>{course.courseTitle}</p>
+            <p>{course.createAt}</p>
+          </StCourse>
+        );
+      })}
     </>
   );
 }
@@ -103,7 +115,8 @@ function ShowMapWidthLine() {
 export default ShowMapWidthLine;
 
 const StCourse = styled.div`
-  width: 60px;
-  hegiht: 30px;
+  width: 550px;
+  height: 300px;
   border: 1px solid green;
+  cursor: pointer;
 `;

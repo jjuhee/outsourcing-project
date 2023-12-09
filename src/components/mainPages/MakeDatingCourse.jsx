@@ -12,9 +12,9 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedFileNames, setSelectedFileNames] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
-  const [imageUrl, setImageUrl] = useState('');
   const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
   const [courseTitle, setCourseTitle] = useState('');
+
   const uuid = uuid4();
   const TODAY = dayjs().format('YY-MM-DD HH:mm:ss');
 
@@ -26,6 +26,10 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
     }
   });
 
+  const onTitleChange = (e) => {
+    setCourseTitle(e.target.value);
+  };
+
   // 이미지 파일 선택
   const handleFileSelect = (event) => {
     const files = event.target.files;
@@ -33,7 +37,7 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
     const fileNameArray = [];
     const previewUrlArray = [];
 
-    for (let i = 0; i < files.length && i < 3; i++) {
+    for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (allowedFileTypes.includes(file.type)) {
         fileArray.push(file);
@@ -62,7 +66,9 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   const renderSelectedFilePreviews = () => {
     return previewUrls.map((previewUrl, index) => (
       <StSelectedFileWrapper key={index}>
-        <p>장소: {selectedFileNames[index]}</p>
+        <p>
+          장소{index + 1}: {selectedFileNames[index]}
+        </p>
         {previewUrl && <StImagePreview src={previewUrl} alt="File Preview" />}
       </StSelectedFileWrapper>
     ));
@@ -71,43 +77,47 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   const onClickCourseSaveButtonHandler = async (e) => {
     e.preventDefault();
 
-    const uploadImageAndGetURL = async () => {
-      if (selectedFiles) {
-        const storageRef = ref(storage, 'placeImages/' + selectedFiles.name);
-        await uploadBytes(storageRef, selectedFiles); // 파일 업로드
-        const url = await getDownloadURL(storageRef); // 파일 url 가져오기
-        setImageUrl(url);
-        return url;
-      } else {
-        return '';
-      }
-    };
-
     if (courseTitle.trim() === '') {
       alert('제목을 입력해주세요!');
       return false;
     }
+    const uploadImagesAndGetURLs = async () => {
+      if (selectedFiles) {
+        const urls = [];
+        for (let i = 0; i < selectedFiles.length; i++) {
+          const storageRef = ref(
+            storage,
+            'placeImages/' + selectedFiles[i].name
+          );
 
-    let imageUrl = '';
+          await uploadBytes(storageRef, selectedFiles[i]); // 파일 업로드
+          const url = await getDownloadURL(storageRef); // 파일 url 가져오기
+          urls.push(url);
+        }
+        return urls;
+      } else {
+        return [];
+      }
+    };
+
+    let imageUrls = [];
     if (selectedFiles) {
-      imageUrl = await uploadImageAndGetURL();
+      imageUrls = await uploadImagesAndGetURLs();
     }
-
     mutation.mutate({
       // 현재 임시로 uuid 랜덤 생성 -> 유저 가입 uid로 바꿔놓기
       userUid: uuid,
       courseTitle: courseTitle,
-      place: selectedPlaces,
+      places: selectedPlaces,
       createAt: TODAY,
-      imgUrl: imageUrl
+      imageUrls
     });
+
+    if (mutation.isSuccess) alert('코스가 등록되었습니다!');
     setSelectedPlaces([]);
     setCourseTitle('');
-    if (mutation.isSuccess) alert('코스가 등록되었습니다!');
-  };
 
-  const onTitleChange = (e) => {
-    setCourseTitle(e.target.value);
+    console.log('등록되었습니다');
   };
 
   return (
@@ -129,7 +139,7 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
 
         <StFileWrapper>
           <label htmlFor="file-upload" className="custom-file-upload">
-            장소1: 파일 첨부
+            장소: 파일 첨부
           </label>
           <input
             id="file-upload"
@@ -140,7 +150,6 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
           />
           {selectedFileNames && (
             <StSelectedFileWrapper>
-              {/* <p>선택한 파일: {selectedFileNames}</p> */}
               {previewUrls.length > 0 && renderSelectedFilePreviews()}
             </StSelectedFileWrapper>
           )}
