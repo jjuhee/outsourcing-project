@@ -26,7 +26,7 @@ function Profile() {
     event.preventDefault();
     await signOut(auth);
     localStorage.removeItem('email');
-    navigate('/login');
+    navigate('/');
   };
 
   // 데이터 가져오기
