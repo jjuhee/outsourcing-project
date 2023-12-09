@@ -115,7 +115,6 @@ function Signup() {
       const userDocRef = await addDoc(collection(db, 'users'), {
         uid: user.uid,
         email: user.email,
-        nickname,
         avatar: downloadURL
       });
 

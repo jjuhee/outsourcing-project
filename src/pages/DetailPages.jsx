@@ -1,7 +1,13 @@
-import React from 'react';
+import ShowMapWidthLine from 'components/mainPages/ShowMapsWithLine';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 function DetailPages() {
-  return <div>DetailPages</div>;
+  return (
+    <>
+      <ShowMapWidthLine />
+    </>
+  );
 }
 
 export default DetailPages;

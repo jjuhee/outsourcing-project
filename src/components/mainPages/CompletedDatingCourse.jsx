@@ -1,44 +1,63 @@
 import { getDatingCourses } from 'api/course';
-import { auth } from '../../firebase/firebase.config';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import profileImg from 'assets/happy-couple-facing-each-other-260nw-2122589009.webp';
 
 function CompletedDatingCourse() {
   const { isLoading, isError, data } = useQuery(['course'], getDatingCourses);
+  const navigate = useNavigate();
+
+  const goToDetailButtonHandler = (uid) => {
+    navigate(`/detail/${uid}`);
+  };
 
   return (
-    <StyledPlace>
-      <span>데이트 추천 코스</span>
-      {data?.map((place) => {
+    <StPlaceWrapper>
+      <StRecommendTitle>데이트 추천 코스</StRecommendTitle>
+      {data?.map((course) => {
         return (
-          <div style={{ border: '2px solid black' }}>
+          <StCourseWrapper
+            key={course.courseUid}
+            style={{ border: '2px solid black' }}
+          >
             {isLoading && <p>로딩중입니다!</p>}
             {isError && <p>서버오류 발생!</p>}
-            <p>코스명: {place.courseTitle}</p>
-            <p>작성날짜: {place.createAt}</p>
-            <StCourseWrapper>
-              {place.place.map((item) => {
+            <StCourseTitle>코스명: {course.courseTitle}</StCourseTitle>
+            <StWriteDay>작성날짜: {course.createAt}</StWriteDay>
+            <StWriter>작성한사람</StWriter>
+            <StProfileImgContainer>
+              <img src={`${profileImg}`} alt="프로필 이미지" />
+            </StProfileImgContainer>
+            <StCourseDetailButton
+              onClick={() => goToDetailButtonHandler(course.courseUid)}
+            >
+              상세보기
+            </StCourseDetailButton>
+            <StCourseContainer>
+              {course.places.map((place) => {
                 return (
-                  <StUl key={item.id}>
-                    <StLi>장소이름: {item.place_name}</StLi>
-                    <StLi>카테고리: {item.category_name}</StLi>
-                    <StLi>주소: {item.address_name}</StLi>
-                  </StUl>
+                  <StCourseList key={place.id}>
+                    <li>장소이름: {place.place_name}</li>
+                    {course.imageUrls[0]}
+                    <li>{place.imageUrls}</li>
+                    <li>카테고리: {place.category_name}</li>
+                    <li>주소: {place.address_name}</li>
+                  </StCourseList>
                 );
               })}
-            </StCourseWrapper>
-          </div>
+            </StCourseContainer>
+          </StCourseWrapper>
         );
       })}
-    </StyledPlace>
+    </StPlaceWrapper>
   );
 }
 
 export default CompletedDatingCourse;
 
-const StyledPlace = styled.div`
+const StPlaceWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -46,12 +65,43 @@ const StyledPlace = styled.div`
   & span {
     font-size: 40px;
   }
+  margin-top: 40px;
+`;
+
+const StRecommendTitle = styled.h2`
+  font-size: 1.5rem;
 `;
 
 const StCourseWrapper = styled.div``;
 
-const StUl = styled.ul`
-  border: 2px solid yellow;
+const StCourseTitle = styled.p`
+  font-size: 1.3rem;
 `;
 
-const StLi = styled.li``;
+const StWriteDay = styled.p``;
+
+const StWriter = styled.p``;
+
+const StProfileImgContainer = styled.div`
+  img {
+    border-radius: 50%;
+    height: 80px;
+  }
+`;
+
+const StCourseContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StCourseDetailButton = styled.button``;
+
+const StCourseList = styled.ul`
+  border: 2px solid black;
+  padding: 15px;
+
+  li {
+    font-size: 1rem;
+  }
+`;
