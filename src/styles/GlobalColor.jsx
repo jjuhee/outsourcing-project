@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalColor = createGlobalStyle`
   :root {
     --header-color:#e79992;
+    --header-font-color:#8f1d36;
     --header-button-color:#ff5f5f;
     --header-button-border:#ff5151;
     --login-signup-background-color:#f9e8e6;
@@ -14,6 +15,7 @@ const GlobalColor = createGlobalStyle`
     --signup-profileimg-text:#0044ff;
     --search-input-background-color:#d1e9ff;
     --search-button:#4dcaff;
+    --date-course-title:#eaa955;
   }
 `;
 

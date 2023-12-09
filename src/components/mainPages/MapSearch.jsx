@@ -91,7 +91,7 @@ function MapSearch() {
                 <div>{place.phone}</div>
                 {/* <StUrl href={place.place_url}>{place.place_url}</StUrl> */}
                 <button onClick={() => clickAddCourseHandler(place)}>
-                  코스로 추가
+                  코스 추가
                 </button>
               </StyledDateCourseMaking>
             );
@@ -99,7 +99,10 @@ function MapSearch() {
         </StyledSearchContainer>
       </StyledMapContainer>
       <ArrowImg />
-      <MakeDatingCourse selectedPlaces={selectedPlaces} setSelectedPlaces={setSelectedPlaces} />
+      <MakeDatingCourse
+        selectedPlaces={selectedPlaces}
+        setSelectedPlaces={setSelectedPlaces}
+      />
     </StyledMapSearchCourseContainer>
   );
 }
@@ -116,7 +119,7 @@ const StyledMapContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20px;
-  background-image: url('/map.jpg');
+  background-image: url('/map.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -160,7 +163,7 @@ const StyledPlaceInputButton = styled.form`
 
 const StyledSearchContainer = styled.div`
   height: 350px;
-  width: 490px;
+  width: 455px;
   max-height: 180px;
   position: relative;
   overflow-x: hidden;
@@ -182,7 +185,15 @@ const StyledDateCourseMaking = styled.div`
     margin-bottom: 4px;
   }
   button {
-    margin-left: 190px;
+    margin-left: 180px;
+    background-image: url(/addCourseButton.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    width: 115px;
+    height: 60px;
+    border: none;
   }
 `;
 
