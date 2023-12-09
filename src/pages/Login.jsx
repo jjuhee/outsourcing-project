@@ -24,7 +24,8 @@ function Login() {
         password
       );
       const user = userCredintial.user;
-      dispatch(logIn({ uid: user.uid, nickname: user.nickname }));
+      dispatch(logIn({ uid: user.uid, nickname: user.displayName, avatar: user.photoURL }));
+
       alert('로그인 성공!');
       navigate('/');
     } catch (error) {
