@@ -6,7 +6,8 @@ import styled from 'styled-components';
 function MainPages() {
   return (
     <MainContainer>
-      <GifBackground src="/background.gif" alt="animatedBackground" />
+      {/* <GifBackground src="/background.gif" alt="animatedBackground" /> */}
+      <GifBackground src="/mainBackground.jpg" alt="animatedBackground" />
       <MapSearch />
       <CompletedDatingCourse />
     </MainContainer>

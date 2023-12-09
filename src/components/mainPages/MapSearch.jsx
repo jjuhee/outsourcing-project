@@ -99,7 +99,10 @@ function MapSearch() {
         </StyledSearchContainer>
       </StyledMapContainer>
       <ArrowImg />
-      <MakeDatingCourse selectedPlaces={selectedPlaces} setSelectedPlaces={setSelectedPlaces} />
+      <MakeDatingCourse
+        selectedPlaces={selectedPlaces}
+        setSelectedPlaces={setSelectedPlaces}
+      />
     </StyledMapSearchCourseContainer>
   );
 }
@@ -116,8 +119,7 @@ const StyledMapContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20px;
-  /* background-image: url('/map.png'); */
-  background-image: url(/mainBackground.gpj);
+  background-image: url('/map.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
