@@ -99,7 +99,7 @@ function MapSearch() {
         </StyledSearchContainer>
       </StyledMapContainer>
       <ArrowImg />
-      <MakeDatingCourse selectedPlaces={selectedPlaces} />
+      <MakeDatingCourse selectedPlaces={selectedPlaces} setSelectedPlaces={setSelectedPlaces} />
     </StyledMapSearchCourseContainer>
   );
 }

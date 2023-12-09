@@ -15,11 +15,10 @@ function Signup() {
     email: '',
     password: '',
     nickname: '',
-    uid: '',
-    avatar: ''
+    uid: ''
   });
 
-  const { email, password, nickname, avatar } = userInfo;
+  const { email, password, nickname } = userInfo;
 
   const changeUserInfoHandler = (event) => {
     const { name, value } = event.target;
@@ -82,8 +81,6 @@ function Signup() {
     }
 
     try {
-      const { email, password, nickname, avatar } = userInfo;
-
       // Firebase Authentication에 회원가입
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -115,6 +112,7 @@ function Signup() {
       const userDocRef = await addDoc(collection(db, 'users'), {
         uid: user.uid,
         email: user.email,
+        nickname,
         avatar: downloadURL
       });
 

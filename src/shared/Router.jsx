@@ -25,13 +25,14 @@ function Router() {
                 <Route path="/" element={<MainPages />} />
                 <Route path="/detail/:id" element={<DetailPages />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="*" element={<Navigate replace to="/" />} />
               </Route>
             </>
           ) : (
             <>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="*" element={<Navigate to="/login" replace />} />
+              <Route path="*" element={<Navigate replace to="login" />} />
             </>
           )}
         </Routes>
