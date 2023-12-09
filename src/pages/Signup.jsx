@@ -148,11 +148,13 @@ function Signup() {
   };
 
   return (
-    <>
-      <form>
-        <p>회원가입</p>
+    <StyledSignUp>
+      <StyledImg>
+        <p>Couple The Place</p>
+      </StyledImg>
+      <StyledForm>
+        <p>Sign up</p>
         <div>
-          <label htmlFor="email">Email</label>
           <SignupInput
             type="email"
             id="email"
@@ -161,7 +163,6 @@ function Signup() {
             onChange={changeUserInfoHandler}
             placeholder="이메일을 작성해주세요"
           />
-          <label htmlFor="password">Password</label>
           <SignupInput
             type="password"
             id="password"
@@ -172,7 +173,6 @@ function Signup() {
             minLength={6}
             maxLength={15}
           />
-          <label htmlFor="nickname">Nickname</label>
           <SignupInput
             type="text"
             id="nickname"
@@ -183,12 +183,14 @@ function Signup() {
             minLength={1}
             maxLength={10}
           />
-          <SignupProfileImg htmlFor="profileImg">
-            프로필 이미지 업로드
-          </SignupProfileImg>
-          {previewURL && (
-            <ImagePreview src={previewURL} alt="프로필 이미지 미리보기" />
-          )}
+          <SignupProfileSpace>
+            <SignupProfileImg htmlFor="profileImg">
+              프로필 이미지 업로드
+            </SignupProfileImg>
+            {previewURL && (
+              <ImagePreview src={previewURL} alt="프로필 이미지 미리보기" />
+            )}
+          </SignupProfileSpace>
           <ImgeInput
             type="file"
             accept="image/*"
@@ -196,26 +198,91 @@ function Signup() {
             onChange={handleFileSelect}
           />
         </div>
-        <div>
+        <ButtonContainer>
           <SignupButton onClick={onSignupHandler}>가입하기</SignupButton>
-          <SignupButton onClick={loginPageHandler}>로그인</SignupButton>
-        </div>
-      </form>
-    </>
+          <GotoLoginPage onClick={loginPageHandler}>
+            로그인 페이지
+          </GotoLoginPage>
+        </ButtonContainer>
+      </StyledForm>
+    </StyledSignUp>
   );
 }
 
 export default Signup;
 
-const SignupInput = styled.input`
-  background-color: #ffe7cf;
-  width: 100%;
+const StyledSignUp = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--login-signup-background-color);
 `;
 
-const SignupButton = styled.button`
-  width: 10vw;
-  height: 5vh;
-  border-radius: 2px;
+const StyledImg = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/signupPage.jpg');
+  background-size: cover;
+  background-position: center bottom -60px;
+  width: 500px;
+  height: 500px;
+  font-size: 45px;
+  p {
+    padding-top: 250px;
+  }
+`;
+
+const StyledForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 500px;
+  height: 500px;
+  background-color: var(--login-signup-input-background-color);
+  p {
+    font-size: 40px;
+    padding: 20px;
+    width: 100%;
+    margin-left: 15px;
+  }
+`;
+
+const SignupInput = styled.input`
+  width: 80%;
+  border: none;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--login-signup-input-bottom);
+  margin-top: 20px;
+  margin-left: 15px;
+  background-color: transparent;
+`;
+
+const SignupProfileSpace = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  margin-right: 30px;
+  height: 10vh;
+`;
+
+const SignupProfileImg = styled.label`
+  margin: 5px 0 20px 0;
+  font-weight: bold;
+  font-size: 13px;
+  color: var(--signup-profileimg-text);
+  display: inline-block;
+  cursor: pointer;
+`;
+
+const ImagePreview = styled.img`
+  max-width: 80px;
+  max-height: 80px;
+  margin-left: 20px;
 `;
 
 const ImgeInput = styled.input`
@@ -224,16 +291,31 @@ const ImgeInput = styled.input`
   display: none;
 `;
 
-const SignupProfileImg = styled.label`
-  margin: 5px 0 20px 0;
-  font-weight: bold;
-  font-size: 13px;
-  color: #0095f6;
-  display: inline-block;
-  cursor: pointer;
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
-const ImagePreview = styled.img`
-  width: 100%;
-  max-height: 200px;
+const SignupButton = styled.button`
+  width: 10vw;
+  height: 4vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 170%;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
+`;
+
+const GotoLoginPage = styled.button`
+  background: none;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  text-decoration: underline;
 `;

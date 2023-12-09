@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { auth, db } from '../firebase/firebase.config';
@@ -16,6 +16,9 @@ function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
   const localStorageEmail = localStorage.getItem('email');
+
+  const userInfo = useSelector((state) => state.auth);
+  console.log(userInfo);
 
   // 버튼 클릭시 Localstorage에 있는 값이 삭제되며, 다시 로그인 페이지로 간다.
 
@@ -48,6 +51,7 @@ function Profile() {
   // 입력받은 값 파이어베이스에 수정하기
   const onEditDone = async (event) => {
     const user = users.find((user) => user.email === localStorageEmail);
+    console.log(user);
     const userRef = doc(db, 'users', user.id);
     await updateDoc(userRef, { ...user, nickname: editingText });
 

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Map, MapMarker, Polyline, useKakaoLoader } from 'react-kakao-maps-sdk';
 
 function MyMap({ markers, setMap, enableDrawing = false }) {
   //useKakaoLoader();
+
   return (
     <div>
       <Map // 로드뷰를 표시할 Container
@@ -11,8 +12,8 @@ function MyMap({ markers, setMap, enableDrawing = false }) {
           lng: 126.9786567
         }}
         style={{
-          width: '440px',
-          height: '440px'
+          width: '332px',
+          height: '232.2px'
         }}
         level={3}
         onCreate={setMap}

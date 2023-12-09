@@ -122,8 +122,8 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
 
   return (
     <>
-      <StDateTitle>데이트코스</StDateTitle>
       <StDateCourseWrapper>
+        <StDateTitle>데이트코스</StDateTitle>
         {selectedPlaces.map((place) => {
           return (
             <StDatingListContainer key={place.id}>
@@ -181,8 +181,8 @@ const StDateCourseWrapper = styled.div`
   flex-direction: column;
   text-align: center;
   font-size: 0.9rem;
-  width: 250px;
-  height: 400px;
+  width: 350px;
+  height: 700px;
   border: 1px solid black;
 `;
 

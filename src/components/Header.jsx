@@ -15,34 +15,54 @@ function Header() {
   return (
     <>
       <StyledBtn>
-        <button onClick={mainPagesHandler}>홈으로</button>
         <span>커플 더플 (Couple The Place)</span>
         <div>
-          <button onClick={profileHandler}>프로필</button>
+          <HomeButton onClick={mainPagesHandler} />
+          <ProfileButton onClick={profileHandler} />
         </div>
       </StyledBtn>
     </>
   );
 }
 
-export default Header;
-
 const StyledBtn = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 1000px;
-  margin: auto;
   background-color: var(--header-color);
   padding: 20px;
-  & span {
+  span {
     font-size: 30px;
+    margin-left: 300px;
   }
-  & button {
-    margin-left: 10px;
+  div {
+    display: flex;
+    margin-right: 300px;
+  }
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 22px;
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--header-button-border);
+    border-radius: 50%;
     cursor: pointer;
     &:hover {
       color: var(--header-button-color);
     }
   }
+`;
+
+const HomeButton = styled.button`
+  background-image: url(/homeIcon.jpg);
+  background-size: cover;
+`;
+
+export default Header;
+
+const ProfileButton = styled.button`
+  background-image: url(/profileImage.png);
+  background-size: cover;
 `;
