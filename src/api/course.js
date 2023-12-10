@@ -1,6 +1,7 @@
 import { db } from '../firebase/firebase.config';
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -26,7 +27,11 @@ const addDatingCourse = async (newDatingCourse) => {
   await setDoc(newDocRef, { ...newDatingCourse, courseUid: newDocRef.id });
 };
 
-export { getDatingCourses, addDatingCourse };
+const deleteDatingCourse = async () => {
+  await deleteDoc(doc(db, 'datingCourse', 'courseUid'));
+};
+
+export { getDatingCourses, addDatingCourse, deleteDatingCourse };
 
 //   try {
 //     await setDoc(newDocRef, {
