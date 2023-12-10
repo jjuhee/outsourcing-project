@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
-import { storage } from '../../firebase/firebase.config';
-import uuid4 from 'uuid4';
 import dayjs from 'dayjs';
 import styled, { keyframes } from 'styled-components';
 import { QueryClient, useMutation } from 'react-query';
 import { addDatingCourse } from 'api/course';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useSelector } from 'react-redux';
 
 function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
-  // 사진 업로드 상태
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [selectedFileNames, setSelectedFileNames] = useState([]);
-  const [previewUrls, setPreviewUrls] = useState([]);
-  const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
   const [courseTitle, setCourseTitle] = useState('');
 
   const { uid, nickname, avatar } = useSelector((state) => state.auth);
@@ -34,50 +26,6 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
     setCourseTitle(e.target.value);
   };
 
-  // 이미지 파일 선택
-  const handleFileSelect = (event) => {
-    const files = event.target.files;
-    const fileArray = [];
-    const fileNameArray = [];
-    const previewUrlArray = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (allowedFileTypes.includes(file.type)) {
-        fileArray.push(file);
-        fileNameArray.push(file.name);
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          previewUrlArray.push(reader.result);
-          if (previewUrlArray.length === files.length) {
-            setPreviewUrls([...previewUrls, ...previewUrlArray]);
-          }
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert(
-          '이 파일 형식은 허용되지 않습니다. JPG, PNG, GIF 파일을 선택해주세요.'
-        );
-        event.target.value = null;
-      }
-    }
-
-    setSelectedFiles([...selectedFiles, ...fileArray]);
-    setSelectedFileNames([...selectedFileNames, ...fileNameArray]);
-  };
-
-  const renderSelectedFilePreviews = () => {
-    return previewUrls.map((previewUrl, index) => (
-      <StSelectedFileWrapper key={index}>
-        <p>
-          장소{index + 1}: {selectedFileNames[index]}
-        </p>
-        {previewUrl && <StImagePreview src={previewUrl} alt="File Preview" />}
-      </StSelectedFileWrapper>
-    ));
-  };
-
   const clickDeleteCourseHandler = (id) => {
     console.log('jhh:', id, '11:', selectedPlaces);
     const newPlaces = selectedPlaces.filter((slectedPlace) => {
@@ -93,29 +41,6 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
       alert('제목을 입력해주세요!');
       return false;
     }
-    const uploadImagesAndGetURLs = async () => {
-      if (selectedFiles) {
-        const urls = [];
-        for (let i = 0; i < selectedFiles.length; i++) {
-          const storageRef = ref(
-            storage,
-            'placeImages/' + selectedFiles[i].name
-          );
-
-          await uploadBytes(storageRef, selectedFiles[i]); // 파일 업로드
-          const url = await getDownloadURL(storageRef); // 파일 url 가져오기
-          urls.push(url);
-        }
-        return urls;
-      } else {
-        return [];
-      }
-    };
-
-    let imageUrls = [];
-    if (selectedFiles) {
-      imageUrls = await uploadImagesAndGetURLs();
-    }
     mutation.mutate({
       userUid: uid,
       userNickname: nickname,
@@ -123,10 +48,8 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
       courseTitle: courseTitle,
       places: selectedPlaces,
       createAt: TODAY,
-      imageUrls
     });
 
-    //if (mutation.isSuccess) alert('코스가 등록되었습니다!');
     setSelectedPlaces([]);
     setCourseTitle('');
 
@@ -152,24 +75,6 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
             );
           })}
         </div>
-
-        {/* <StyledFileWrapper> */}
-        {/* <label htmlFor="file-upload" className="custom-file-upload">
-            장소: 파일 첨부
-          </label> */}
-        <StyledInput
-          id="file-upload"
-          type="file"
-          onChange={handleFileSelect}
-          style={{ display: 'none' }}
-          multiple
-        />
-        {selectedFileNames && (
-          <StSelectedFileWrapper>
-            {previewUrls.length > 0 && renderSelectedFilePreviews()}
-          </StSelectedFileWrapper>
-        )}
-        {/* </StyledFileWrapper> */}
 
         <StyledDateForm onSubmit={onClickCourseSaveButtonHandler}>
           <label htmlFor="courseTitle"></label>
@@ -270,28 +175,6 @@ const StyledDatingListContainer = styled.div`
   }
 `;
 
-// const StyledFileWrapper = styled.form`
-//   input {
-//     margin-left: 50px;
-//   }
-//   .custom-file-upload {
-//     background-color: var(--mainOrange);
-//     border: 2px solid var(--mainOrange);
-//     display: inline-block;
-//     padding: 6px 12px;
-//     cursor: pointer;
-//     border-radius: 0.5vh;
-//     transition: background-color 0.3s ease;
-//   }
-//   .custom-file-upload:hover {
-//     background-color: transparent;
-//   }
-// `;
-
-const StyledInput = styled.input`
-  margin-left: 20px;
-`;
-
 const StyledDateForm = styled.form`
   display: flex;
   align-items: center;
@@ -322,21 +205,4 @@ const StyledCourseSaveButton = styled.button`
   &:hover {
     animation: ${jeilyAnimation} 0.5s;
   }
-`;
-
-const StSelectedFileWrapper = styled.div`
-  margin-top: 1vh;
-  text-align: start;
-  p {
-    font-size: 14px;
-    color: #333;
-  }
-`;
-
-const StImagePreview = styled.img`
-  width: auto;
-  height: auto;
-  margin-top: 10px;
-  max-width: 100%;
-  max-height: 100%;
 `;

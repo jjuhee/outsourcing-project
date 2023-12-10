@@ -17,8 +17,7 @@ function MapSearch() {
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(inputTitle, (data, status, _pagination) => {
       if (status === kakao.maps.services.Status.OK) {
-        console.log(data);
-        setPlaces(data); // TODO : firebase + react query 로 옮기기
+        setPlaces(data);
 
         // 마커 추가
         const bounds = new kakao.maps.LatLngBounds();
@@ -89,7 +88,6 @@ function MapSearch() {
                 <StyledTitle>{place.place_name}</StyledTitle>
                 <div>{place.road_address_name}</div>
                 <div>{place.phone}</div>
-                {/* <StUrl href={place.place_url}>{place.place_url}</StUrl> */}
                 <button onClick={() => clickAddCourseHandler(place)}>
                   코스 추가
                 </button>
@@ -138,7 +136,7 @@ const StyledMapContainer = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   height: 700px;
-  width: 600px;
+  min-width: 600px;
 `;
 
 const StyledMap = styled.div`

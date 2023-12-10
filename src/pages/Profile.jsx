@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { db, storage } from '../firebase/firebase.config';
-import Button from 'components/common/Button';
 import Avatar from 'components/common/Avartar';
-// import { collection, getDocs } from '../firebase/firebase.config';
 import { signOut, getAuth, updateProfile } from 'firebase/auth';
 import {
   doc,
@@ -15,15 +13,14 @@ import {
   updateDoc,
   deleteDoc
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, list } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {
   logOut,
   setUserAvatar,
   setUserNickname
 } from '../redux/modules/authSlice';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { deleteDatingCourse, getDatingCourses } from 'api/course';
-import { QueryClient } from '@tanstack/react-query';
 
 function Profile() {
   const userInfo = useSelector((state) => state.auth);
@@ -52,9 +49,6 @@ function Profile() {
     (course) => course.userUid === userInfo.uid
   );
 
-  // const [selectedFile, setSelectedFile] = useState(null);
-  // const [previewURL, setPreviewURL] = useState(null);
-
   /** 버튼 클릭시 Localstorage에 있는 값이 삭제되며, 다시 로그인 페이지로 간다.*/
   const logOutHandler = async (event) => {
     await signOut(auth);
@@ -75,10 +69,7 @@ function Profile() {
         };
         initialUsers.push(data);
       });
-
       setUsers(initialUsers);
-      //const user = initialUsers.find((user) => user.uid === userInfo.uid);
-      //dispatch(us)
     };
     fetchData();
   }, []);
@@ -93,57 +84,46 @@ function Profile() {
       alert('변경된 내용이 없습니다!');
       return;
     }
+    try {
+      const user = users.find((user) => user.uid === userInfo.uid);
+      const userRef = doc(db, 'users', user.id); // user.id === doc id
 
-    const user = users.find((user) => user.uid === userInfo.uid);
-    const userRef = doc(db, 'users', user.id); // user.id === doc id
+      // 파일이 있으면 이미지를 Storage에 업로드
+      if (selectedFile) {
+        let downloadURL;
+        const imageRef = ref(
+          storage,
+          `profileImages/${user.uid}/${selectedFile.name}`
+        );
+        await uploadBytes(imageRef, selectedFile);
+        downloadURL = await getDownloadURL(imageRef);
 
-    // 파일이 있으면 이미지를 Storage에 업로드
-    if (selectedFile) {
-      let downloadURL;
-      const imageRef = ref(
-        storage,
-        `profileImages/${user.uid}/${selectedFile.name}`
-      );
-      await uploadBytes(imageRef, selectedFile);
-      downloadURL = await getDownloadURL(imageRef);
+        if (downloadURL) {
+          // 사용자 정보에 프로필 이미지 URL 업데이트
+          await updateProfile(auth.currentUser, {
+            photoURL: downloadURL
+          });
 
-      if (downloadURL) {
-        // 사용자 정보에 프로필 이미지 URL 업데이트
-        await updateProfile(auth.currentUser, {
-          photoURL: downloadURL
-        });
-
-        // Firestore에 사용자 정보 업데이트
-        await updateDoc(userRef, { ...user, avatar: downloadURL });
-
-        // redux 업데이트
-        dispatch(setUserAvatar(downloadURL));
-        //초기화
-        setSelectedFile(null);
+          // Firestore에 사용자 정보 업데이트
+          await updateDoc(userRef, { ...user, avatar: downloadURL });
+          // redux 업데이트
+          dispatch(setUserAvatar(downloadURL));
+          //초기화
+          setSelectedFile(null);
+        }
       }
-    } else {
-      // 변경이 있으면 ? 사용자 정보에 닉네임 업데이트
+      // 변경이 있으면 사용자 정보에 닉네임 업데이트
       if (editingText.trim() !== userInfo.nickname) {
         await updateProfile(auth.currentUser, {
           displayName: editingText
         });
-
         await updateDoc(userRef, { ...user, nickname: editingText });
         dispatch(setUserNickname(editingText));
       }
+    } catch (error) {
+      console.log(error);
     }
 
-    // const editedNickname = users.map((user) => {
-    //   if (user.uid === userInfo.uid) {
-    //     return {
-    //       ...user,
-    //       nickname: editingText
-    //     };
-    //   } else {
-    //     return user;
-    //   }
-    // });
-    //setUsers(editedNickname);
     setIsEditing(false);
   };
 
@@ -200,11 +180,6 @@ function Profile() {
           ) : (
             <Nickname>
               {userInfo.nickname}
-              {/* {users
-                .filter((item) => item.uid === userInfo.uid)
-                .map((item) => {
-                  return item.nickname;
-                })} */}
             </Nickname>
           )}
 
@@ -334,10 +309,6 @@ const NickNameEditButton = styled.button`
 const Nickname = styled.span`
   font-size: 24px;
   font-weight: 700;
-`;
-const UserId = styled.span`
-  font-size: 16px;
-  color: gray;
 `;
 const StCourseWrapper = styled.div``;
 //

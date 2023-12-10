@@ -1,4 +1,3 @@
-// 여기서부터----------------------------------------------------------
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -25,17 +24,3 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-
-// // 로그인 상태 변경 시 실행할 콜백 함수
-// export const setupAuthStateListener = (dispatch) => {
-//   onAuthStateChanged(auth, (user)=> {
-//     if (user) {
-//       //로그인 했다면
-//       const userData = {
-//         uid: user.uid,
-//         email:user.email,
-
-//       }
-//     }
-//   })
-// }

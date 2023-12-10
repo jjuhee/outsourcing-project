@@ -3,7 +3,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   orderBy,
   query,
@@ -38,17 +37,3 @@ const deleteDatingCourse = async () => {
 };
 
 export { getDatingCourses, addDatingCourse, deleteDatingCourse };
-
-//   try {
-//     await setDoc(newDocRef, {
-//       courseUid: newDocRef.id,
-//       // 현재 임시로 uuid 랜덤 생성 -> 유저 가입 uid로 바꿔놓기
-//       userUid: uuid4(),
-//       courseTitle: courseTitle,
-//       place: selectedPlaces,
-//       createAt: TODAY
-//     });
-//     alert('코스가 등록되었습니다!');
-//   } catch (error) {
-//     console.log(error);
-//   }
