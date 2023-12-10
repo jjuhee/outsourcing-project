@@ -65,7 +65,7 @@ function ShowMapWidthLine() {
   return (
     <StBody>
       <StCourseWrapper>
-        <StCourseTitle>코스 상세보기</StCourseTitle>
+        <StCourseTitle>💟 코스 상세보기 💟</StCourseTitle>
         <MyMap markers={markers} setMap={setMap} enableDrawing />
 
         {courseCurrentData?.map((course) => {
