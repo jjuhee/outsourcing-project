@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 function Header() {
-  const profileImg = useSelector((state) => state.auth.avatar)
   const navigate = useNavigate();
   const mainPagesHandler = () => {
     navigate('/');
@@ -82,7 +81,6 @@ const HomeButton = styled.button`
 `;
 
 const ProfileButton = styled.button`
- 
   background-image: url(/profileImage.png);
   background-size: cover;
 `;

@@ -4,12 +4,10 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import profileImg from 'assets/happy-couple-facing-each-other-260nw-2122589009.webp';
-import { useSelector } from 'react-redux';
 import LodingLayer from 'pages/LodingLayer';
 
 function CompletedDatingCourse() {
   const { isLoading, isError, data } = useQuery(['course'], getDatingCourses);
-  const userInfo = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const goToDetailButtonHandler = (uid) => {
@@ -18,16 +16,15 @@ function CompletedDatingCourse() {
 
   return (
     <StyledPlaceWrapper>
+      {(isLoading) && <LodingLayer>로딩중입니다!</LodingLayer>}
+      {(isError) && <p>서버오류 발생!</p>}
       <StyledRecommendTitle>데이트 추천 코스</StyledRecommendTitle>
-      {/* <StyledDaterecommendList> */}
       {data?.map((course) => {
         return (
           <StyledCourseWrapper
             key={course.courseUid}
             onClick={() => goToDetailButtonHandler(course.courseUid)}
           >
-            {isLoading && <LodingLayer>로딩중입니다!</LodingLayer>}
-            {isError && <p>서버오류 발생!</p>}
             <StyledAvatarNicknameDayContainer>
               <StyledAvatarNickname>
                 <img
@@ -49,7 +46,6 @@ function CompletedDatingCourse() {
                   return (
                     <StyledEachCourseList key={place.id}>
                       <div>장소이름: {place.place_name}</div>
-                      {course.imageUrls[0]}
                       <div>{place.imageUrls}</div>
                       <div>카테고리: {place.category_name}</div>
                       <div>주소: {place.address_name}</div>
@@ -61,7 +57,6 @@ function CompletedDatingCourse() {
           </StyledCourseWrapper>
         );
       })}
-      {/* </StyledDaterecommendList> */}
     </StyledPlaceWrapper>
   );
 }
@@ -100,15 +95,6 @@ const StyledRecommendTitle = styled.h2`
   margin: 180px 0 50px 0;
   color: var(--date-course-title);
 `;
-
-// const StyledDaterecommendList = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   overflow-y: auto;
-//   margin: 50px 0 0 10px;
-// `;
 
 const StyledAvatarNicknameDayContainer = styled.div`
   display: flex;

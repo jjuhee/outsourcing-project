@@ -23,10 +23,8 @@ function ShowMapWidthLine() {
     (course) => course.courseUid === id
   );
 
-  // 코스를 누르면 courseClickHandler
-  // 코스 (key 값으로?) data 가져오기 (useQuery)
-  // 가져온 data로 마커 만들기
-  // 마커의 포지션으로 선 그려줌
+  /**코스를 누르면 가져온 data로 마커 만들기
+   * 마커의 포지션으로 선 그려줌 */
   const courseClickHandler = (uid) => {
     // 마커 추가
     const bounds = new kakao.maps.LatLngBounds();
@@ -34,13 +32,6 @@ function ShowMapWidthLine() {
     let currentCourse = courseData.find(
       (place) => place.courseUid === uid
     ).places;
-
-    // let currentCourse;
-    // courseData.map((place) => {
-    //   if (place.courseUid === uid) {
-    //     currentCourse = place.places;
-    //   }
-    // });
 
     for (var i = 0; i < currentCourse.length; i++) {
       // @ts-ignore
@@ -65,7 +56,7 @@ function ShowMapWidthLine() {
     <StBody>
       <StCourseWrapper>
         <StCourseTitle>💟 코스 상세보기 💟</StCourseTitle>
-        <MyMap markers={markers} setMap={setMap} enableDrawing />
+        <MyMap markers={markers} setMap={setMap} enableDrawing page="detail" />
 
         {courseCurrentData?.map((course) => {
           return (
@@ -121,7 +112,6 @@ const StCourseWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   background-image: url(${backgroundImg});
   background-repeat: no-repeat;
   width: 650px;
@@ -163,6 +153,7 @@ const jeilyAnimation = keyframes`
 
 const StCourseTitle = styled.h3`
   padding: 20px 0 30px 0;
+  margin-left: 110px;
   font-size: 2.5rem;
   color: var(--date-course-title);
   animation: ${shakeAnimation} 1.4s ease infinite;
@@ -176,6 +167,7 @@ const StCourse = styled.div`
   overflow-x: hidden;
   word-break: break-all;
   word-wrap: break-word;
+  margin-left: 25px;
 
   &::-webkit-scrollbar {
     width: 10px;

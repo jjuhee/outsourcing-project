@@ -1,8 +1,7 @@
 import React from 'react';
 import { Map, MapMarker, Polyline } from 'react-kakao-maps-sdk';
 
-function MyMap({ markers, setMap, enableDrawing = false }) {
-  //useKakaoLoader();
+function MyMap({ markers, setMap, enableDrawing = false, page = "main" }) {
 
   return (
     <div>
@@ -11,10 +10,16 @@ function MyMap({ markers, setMap, enableDrawing = false }) {
           lat: 37.566826,
           lng: 126.9786567
         }}
-        style={{
-          width: '332px',
-          height: '232.2px'
-        }}
+        style={
+          (page === 'main') ?
+            {
+              width: '332px',
+              height: '232.2px'
+            } : {
+              width: '470px',
+              height: '300px',
+              marginLeft: '55px'
+            }}
         level={3}
         onCreate={setMap}
       >
@@ -42,7 +47,7 @@ function MyMap({ markers, setMap, enableDrawing = false }) {
           />
         )}
       </Map>
-    </div>
+    </div >
   );
 }
 
