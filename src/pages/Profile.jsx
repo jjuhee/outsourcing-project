@@ -7,15 +7,23 @@ import Button from 'components/common/Button';
 import Avatar from 'components/common/Avartar';
 // import { collection, getDocs } from '../firebase/firebase.config';
 import { signOut, getAuth, updateProfile } from 'firebase/auth';
-import { doc, getDocs, collection, query, updateDoc } from 'firebase/firestore';
+import {
+  doc,
+  getDocs,
+  collection,
+  query,
+  updateDoc,
+  deleteDoc
+} from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {
   logOut,
   setUserAvatar,
   setUserNickname
 } from '../redux/modules/authSlice';
-import { useQuery } from 'react-query';
-import { getDatingCourses } from 'api/course';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { deleteDatingCourse, getDatingCourses } from 'api/course';
+import { QueryClient } from '@tanstack/react-query';
 
 function Profile() {
   const userInfo = useSelector((state) => state.auth);
@@ -29,10 +37,16 @@ function Profile() {
   const dispatch = useDispatch();
 
   const {
-    isLoading,
-    isError,
+    isLoading: courseDataIsLoading,
+    isError: courseDataIsError,
     data: courseData
   } = useQuery(['course'], getDatingCourses);
+
+  const {
+    isLoading: removeIsLoading,
+    isError: removeIsError,
+    data: courseRemoveData
+  } = useQuery(['course'], deleteDatingCourse);
   
   const userCourse = courseData?.filter(
     (course) => course.userUid === userInfo.uid
@@ -149,6 +163,16 @@ function Profile() {
     setSelectedFile(file);
   };
 
+  const clickRemoveButtonHandler = async (uid) => {
+    const delCheck = window.confirm('정말 삭제하시겠습니까?');
+    if (delCheck) {
+      await deleteDoc(doc(db, 'datingCourse', uid));
+      alert('삭제되었습니다!');
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Container>
       <ProfileWrapper>
@@ -211,6 +235,11 @@ function Profile() {
                       </StPlaceList>
                     );
                   })}
+                  <button
+                    onClick={() => clickRemoveButtonHandler(course.courseUid)}
+                  >
+                    삭제
+                  </button>
                 </StCourseList>
               );
             })}
