@@ -16,7 +16,7 @@ function Profile() {
   const [editingText, setEditingText] = useState(userInfo.nickname);
   const [isEditing, setIsEditing] = useState(false);
   const [users, setUsers] = useState([]);
-  //const auth = getAuth();
+  const auth = getAuth();
   const navigate = useNavigate();
   const localUid = localStorage.getItem('uid');
   const dispatch = useDispatch();
