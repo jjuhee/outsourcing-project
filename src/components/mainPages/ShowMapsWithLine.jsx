@@ -3,8 +3,10 @@ import MyMap from 'components/mainPages/MyMap';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import profileImg from 'assets/happy-couple-facing-each-other-260nw-2122589009.webp';
+import backgroundImg from 'assets/dateCourseContainer.png';
+import buttonImg from 'assets/addCourseButton.png';
 
 function ShowMapWidthLine() {
   const { id } = useParams();
@@ -21,63 +23,6 @@ function ShowMapWidthLine() {
   const courseCurrentData = courseData?.filter(
     (course) => course.courseUid === id
   );
-
-  // 2. 유즈쿼리
-  // const { isLoading, isError, refetch } = useQuery(
-  //   ['course', { local: inputTitle }],
-  //   getCourse,
-  //   { enabled: false, select: (local) => local.items }
-  // );
-  // const { isLoading, isError, courseData } = useQuery(
-  //   ['course'],
-  //   getDatingCourseDetail
-  // );
-
-  //임시 데이터
-  // let courseData = [
-  //   {
-  //     address_name: '서울 마포구 상수동 72-1',
-  //     category_group_code: 'SC4',
-  //     category_group_name: '학교',
-  //     category_name: '교육,학문 > 학교 > 대학교',
-  //     distance: '',
-  //     id: '8663561',
-  //     phone: '02-320-1114',
-  //     place_name: '홍익대학교 서울캠퍼스',
-  //     place_url: 'http://place.map.kakao.com/8663561',
-  //     road_address_name: '서울 마포구 와우산로 94',
-  //     x: '126.925554591431',
-  //     y: '37.550874837441'
-  //   },
-  //   {
-  //     address_name: '서울 마포구 상수동 72-1',
-  //     category_group_code: 'SC4',
-  //     category_group_name: '학교',
-  //     category_name: '교육,학문 > 학교 > 대학교',
-  //     distance: '',
-  //     id: '8663561',
-  //     phone: '02-320-1114',
-  //     place_name: '홍익대학교 다른곳',
-  //     place_url: 'http://place.map.kakao.com/8663561',
-  //     road_address_name: '서울 마포구 와우산로 94',
-  //     x: '126.92150590347114',
-  //     y: '37.55264537945837'
-  //   },
-  //   {
-  //     address_name: '서울 마포구 상수동 72-1',
-  //     category_group_code: 'SC4',
-  //     category_group_name: '학교',
-  //     category_name: '교육,학문 > 학교 > 대학교',
-  //     distance: '',
-  //     id: '8663561',
-  //     phone: '02-320-1114',
-  //     place_name: '홍대입구역 공항철도',
-  //     place_url: 'http://place.map.kakao.com/8663561',
-  //     road_address_name: '서울 마포구 와우산로 94',
-  //     x: '126.927010430346',
-  //     y: '37.5573052656667'
-  //   }
-  // ];
 
   // 코스를 누르면 courseClickHandler
   // 코스 (key 값으로?) data 가져오기 (useQuery)
@@ -118,51 +63,157 @@ function ShowMapWidthLine() {
   };
 
   return (
-    <>
-      <MyMap markers={markers} setMap={setMap} enableDrawing />
+    <StBody>
+      <StCourseWrapper>
+        <StCourseTitle>코스 상세보기</StCourseTitle>
+        <MyMap markers={markers} setMap={setMap} enableDrawing />
 
-      {courseCurrentData?.map((course) => {
-        return (
-          <StCourse key={course.courseUid}>
-            <h3>{course.courseTitle}</h3>
-            <p>{course.createAt}</p>
-            <p>작성날짜: {course.createAt}</p>
-            <p>작성한사람: {course.userNickname}</p>
-            <StProfileImgContainer>
-              <img
-                src={`${course.userAvatar || profileImg}`}
-                alt="프로필 이미지"
-              />
-            </StProfileImgContainer>
-            <button onClick={() => courseClickHandler(course.courseUid)}>
-              코스보기
-            </button>
-            {course.places.map((place) => {
-              return (
-                <StCourseList key={place.id}>
-                  <li>장소이름: {place.place_name}</li>
-                  <li>{place.imageUrls}</li>
-                  <li>카테고리: {place.category_name}</li>
-                  <li>주소: {place.address_name}</li>
-                </StCourseList>
-              );
-            })}
-          </StCourse>
-        );
-      })}
-    </>
+        {courseCurrentData?.map((course) => {
+          return (
+            <StCourse key={course.courseUid}>
+              <h3>코스명 {course.courseTitle}</h3>
+              <p>
+                <span>작성날짜</span> {course.createAt}
+              </p>
+              <p>
+                <span>작성한사람</span> {course.userNickname}
+              </p>
+              <StProfileImgContainer>
+                <img
+                  src={`${course.userAvatar || profileImg}`}
+                  alt="프로필 이미지"
+                />
+              </StProfileImgContainer>
+              <button onClick={() => courseClickHandler(course.courseUid)}>
+                코스보기
+              </button>
+              {course.places.map((place, index) => {
+                return (
+                  <StCourseList key={place.id}>
+                    <li className="placeName">
+                      {index + 1} <span>장소이름</span> {place.place_name}
+                    </li>
+                    <li>{place.imageUrls}</li>
+                    <li>
+                      <span>카테고리</span> {place.category_name}
+                    </li>
+                    <li>
+                      <span>주소</span> {place.address_name}
+                    </li>
+                  </StCourseList>
+                );
+              })}
+            </StCourse>
+          );
+        })}
+      </StCourseWrapper>
+    </StBody>
   );
 }
 
 export default ShowMapWidthLine;
 
-const StCourse = styled.div`
-  width: 550px;
-  height: 400px;
-  border: 1px solid green;
+const StBody = styled.body`
+  background-color: var(--login-signup-background-color);
+  padding: 100px;
+`;
 
+const StCourseWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url(${backgroundImg});
+  background-repeat: no-repeat;
+  width: 650px;
+  height: 1000px;
+  margin: 0 auto;
+`;
+
+const shakeAnimation = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+  100% {
+    transform: translateX(3px);
+  }
+`;
+
+const jeilyAnimation = keyframes`
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+`;
+
+const StCourseTitle = styled.h3`
+  padding: 20px 0 30px 0;
+  font-size: 2.5rem;
+  color: var(--date-course-title);
+  animation: ${shakeAnimation} 1.4s ease infinite;
+`;
+
+const StCourse = styled.div`
+  width: 500px;
+  height: 400px;
+  padding: 30px;
+  overflow: auto;
+  overflow-x: hidden;
+  word-break: break-all;
+  word-wrap: break-word;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--search-button);
+  }
+  &::-webkit-scrollbar-track {
+    background-color: var(--search-input-background-color);
+  }
+  h3 {
+    font-size: 1.8rem;
+    padding-bottom: 10px;
+    color: var(--search-button);
+    text-align: center;
+  }
+  p {
+    font-size: 1.5rem;
+  }
+  span {
+    color: var(--login-signup-input-bottom);
+  }
   button {
-    cursor: pointer;
+    background-image: url(${buttonImg});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 100% 50%;
+    width: 200px;
+    height: 50px;
+    margin-top: 10px;
+    font-size: 1.5rem;
+    color: var(--white);
+    &:hover {
+      animation: ${jeilyAnimation} 0.5s;
+    }
   }
 `;
 
@@ -173,4 +224,23 @@ const StProfileImgContainer = styled.div`
   }
 `;
 
-const StCourseList = styled.div``;
+const StCourseList = styled.ul`
+  font-size: 1.5rem;
+  padding-bottom: 20px;
+  border: 5px solid var(--search-input-background-color);
+  border-radius: 5px;
+  margin: 15px 0 15px 0;
+
+  .placeName {
+    color: var(--date-course-title);
+  }
+
+  span {
+    color: var(--login-signup-input-bottom);
+  }
+
+  li {
+    padding: 5px;
+    color: var();
+  }
+`;

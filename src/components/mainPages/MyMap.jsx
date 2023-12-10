@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, MapMarker, Polyline, useKakaoLoader } from 'react-kakao-maps-sdk';
+import { Map, MapMarker, Polyline } from 'react-kakao-maps-sdk';
 
 function MyMap({ markers, setMap, enableDrawing = false }) {
   //useKakaoLoader();
