@@ -180,7 +180,10 @@ function Profile() {
 
         {isEditing ? (
           <label>
-            <Avatar src={previewURL || userInfo.avatar} size="large" />
+            <ProfilePointerAvatar
+              src={previewURL || userInfo.avatar}
+              size="large"
+            />
             <input type="file" accept="image/*" onChange={fileSelectHandler} />
           </label>
         ) : (
@@ -274,6 +277,9 @@ const Container = styled.div`
   height: 100%;
   background-color: var(--login-signup-background-color);
 `;
+const ProfilePointerAvatar = styled(Avatar)`
+  cursor: pointer;
+`;
 //프로필란 배경색
 const ProfileWrapper = styled.section`
   width: 50vw;
@@ -296,6 +302,7 @@ const ProfileWrapper = styled.section`
     height: 24px;
     outline: none;
     padding: 6px 12px;
+    cursor: pointer;
   }
 
   & h1 {

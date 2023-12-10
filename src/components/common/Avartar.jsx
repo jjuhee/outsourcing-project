@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
 import defaultUser from 'assets/happy-couple-facing-each-other-260nw-2122589009.webp';
 
-export default function Avatar({ src, size }) {
+export default function Avatar({ src, size, className }) {
   return (
-    <AvatarFigure size={size}>
+    <AvatarFigure size={size} className={className}>
       <img src={src ?? defaultUser} alt="아바타이미지" />
     </AvatarFigure>
   );
