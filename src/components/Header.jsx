@@ -33,10 +33,9 @@ function Header() {
 
 const StyledBtn = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   background-color: var(--header-color);
-  padding: 20px;
   div {
     display: flex;
     margin-right: 300px;
