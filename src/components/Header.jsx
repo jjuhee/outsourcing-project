@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 function Header() {
   const profileImg = useSelector((state) => state.auth.avatar)
@@ -23,7 +23,8 @@ function Header() {
 
         <div>
           <HomeButton onClick={mainPagesHandler} />
-          <ProfileButton onClick={profileHandler} />
+
+          <ProfileButton onClick={profileHandler} profileImg={profileImg} />
         </div>
       </StyledBtn>
     </>
@@ -82,8 +83,18 @@ const HomeButton = styled.button`
 `;
 
 const ProfileButton = styled.button`
-  background-image: url(/profileImage.png);
-  background-size: cover;
+  ${(props) => {
+    if (props.profileImg) {
+      return css`
+        background-image:url(${props.profileImg});
+      `
+    } else {
+      return css`
+        background-image: url(/profileImage.png);
+      `
+    }
+  }}
+    background-size: cover;
 `;
 
 export default Header;

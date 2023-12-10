@@ -18,7 +18,6 @@ function Profile() {
   const [users, setUsers] = useState([]);
   const auth = getAuth();
   const navigate = useNavigate();
-  const localUid = localStorage.getItem('uid');
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewURL, setPreviewURL] = useState(null);
@@ -31,6 +30,7 @@ function Profile() {
     navigate('/login');
     dispatch(logOut());
   };
+
 
   /** 데이터 가져오기  TODO  : 하나만 가져오기*/
   useEffect(() => {

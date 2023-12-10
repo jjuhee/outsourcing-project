@@ -85,7 +85,7 @@ function Signup() {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       // Firebase Firestore에 사용자 정보 추가
       const user = userCredential.user;
@@ -107,6 +107,10 @@ function Signup() {
           photoURL: downloadURL
         });
       }
+      // 사용자 정보에 닉네임 추가
+      await updateProfile(user, {
+        displayName: nickname
+      });
 
       // Firestore에 사용자 정보 추가
       const userDocRef = await addDoc(collection(db, 'users'), {
