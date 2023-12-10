@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { db, storage } from '../firebase/firebase.config';
 import Button from 'components/common/Button';
@@ -33,9 +33,13 @@ function Profile() {
     isError,
     data: courseData
   } = useQuery(['course'], getDatingCourses);
+  
   const userCourse = courseData?.filter(
     (course) => course.userUid === userInfo.uid
   );
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewURL, setPreviewURL] = useState(null);
 
   /** 버튼 클릭시 Localstorage에 있는 값이 삭제되며, 다시 로그인 페이지로 간다.*/
   const logOutHandler = async (event) => {
@@ -149,6 +153,7 @@ function Profile() {
     <Container>
       <ProfileWrapper>
         <h1>프로필</h1>
+
         {isEditing ? (
           <label>
             <Avatar src={previewURL || userInfo.avatar} size="large" />
@@ -157,6 +162,7 @@ function Profile() {
         ) : (
           <Avatar src={userInfo.avatar} size="large" />
         )}
+        
         <div>
           {isEditing ? (
             <input
@@ -181,12 +187,14 @@ function Profile() {
               <button onClick={onEditDoneHandler}>수정완료</button>
             </div>
           ) : (
-            <button onClick={() => setIsEditing(true)}>수정하기</button>
+            <NickNameEditButton onClick={() => setIsEditing(true)}>
+              수정하기
+            </NickNameEditButton>
           )}
         </div>
 
         <StCourseWrapper>
-          <StCourseTitle>내 코스 보기</StCourseTitle>
+          <StCourseTitle>내가 만든 코스</StCourseTitle>
           <StCourseContainer>
             {userCourse?.map((course) => {
               return (
@@ -209,14 +217,14 @@ function Profile() {
           </StCourseContainer>
         </StCourseWrapper>
 
-        <div>
-          <Button text="로그아웃" onClick={logOutHandler}>
+        <BottomButtonsWrapper>
+          <LogoutButton text="로그아웃" onClick={logOutHandler}>
             로그아웃
-          </Button>
-          <Button text="홈으로" onClick={() => navigate('/')}>
+          </LogoutButton>
+          <HomeButton text="홈으로" onClick={() => navigate('/')}>
             홈으로
-          </Button>
-        </div>
+          </HomeButton>
+        </BottomButtonsWrapper>
       </ProfileWrapper>
     </Container>
   );
@@ -224,18 +232,21 @@ function Profile() {
 
 export default Profile;
 
+//전체 배경색
 const Container = styled.div`
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  background-color: var(--login-signup-background-color);
 `;
-
+//프로필란 배경색
 const ProfileWrapper = styled.section`
-  width: 700px;
+  width: 50vw;
+  height: 80vh;
   border-radius: 12px;
-  background-color: lightgoldenrodyellow;
-  padding: 80px;
+  background-color: var(--login-signup-input-background-color);
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -262,23 +273,69 @@ const ProfileWrapper = styled.section`
     gap: 24px;
   }
 `;
-
+//닉네임수정하기 버튼
+const NickNameEditButton = styled.button`
+  width: 15vw;
+  height: 3vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 6vw;
+  align-self: center;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
+`;
 const Nickname = styled.span`
   font-size: 24px;
   font-weight: 700;
 `;
-
 const UserId = styled.span`
   font-size: 16px;
   color: gray;
 `;
-
 const StCourseWrapper = styled.div``;
-
 const StCourseTitle = styled.h3``;
-
 const StCourseContainer = styled.div``;
-
 const StCourseList = styled.ul``;
-
 const StPlaceList = styled.ul``;
+//로그아웃 버튼
+const LogoutButton = styled.button`
+  margin-right: 20%;
+  height: 4vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 15vw;
+  margin-top: 20px;
+  align-self: center;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
+`;
+//홈으로버튼
+const HomeButton = styled.button`
+  margin-right: 0%;
+  height: 4vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 15vw;
+  margin-top: 20px;
+  align-self: center;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
+`;
+const BottomButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 18%;
+`;
