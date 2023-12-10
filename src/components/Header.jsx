@@ -24,7 +24,7 @@ function Header() {
         <div>
           <HomeButton onClick={mainPagesHandler} />
 
-          <ProfileButton onClick={profileHandler} profileImg={profileImg} />
+          <ProfileButton onClick={profileHandler} />
         </div>
       </StyledBtn>
     </>
@@ -33,10 +33,9 @@ function Header() {
 
 const StyledBtn = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   background-color: var(--header-color);
-  padding: 20px;
   div {
     display: flex;
     margin-right: 300px;
@@ -83,18 +82,9 @@ const HomeButton = styled.button`
 `;
 
 const ProfileButton = styled.button`
-  ${(props) => {
-    if (props.profileImg) {
-      return css`
-        background-image:url(${props.profileImg});
-      `
-    } else {
-      return css`
-        background-image: url(/profileImage.png);
-      `
-    }
-  }}
-    background-size: cover;
+ 
+  background-image: url(/profileImage.png);
+  background-size: cover;
 `;
 
 export default Header;

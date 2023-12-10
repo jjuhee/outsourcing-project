@@ -51,7 +51,7 @@ function MapSearch() {
         return [...prevselectedPlaces, place];
       });
     } else if (selectedPlaces.length < 3) {
-      if (prevPlace.id === place.id) {
+      if (selectedPlaces.find((item) => item.id === place.id)) {
         alert('중복되었습니다!');
       } else {
         setSelectedPlaces((prevselectedPlaces) => {

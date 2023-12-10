@@ -14,7 +14,6 @@ function ShowMapWidthLine() {
   const [map, setMap] = useState(null);
   const { kakao } = window;
 
-  // 1. 아니면
   const {
     isLoading,
     isError,
