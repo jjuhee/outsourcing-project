@@ -24,7 +24,9 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   const mutation = useMutation(addDatingCourse, {
     onSuccess: () => {
       // Invalidate and refresh
+      console.log('onSuccess');
       queryClient.invalidateQueries('course');
+      alert('코스가 등록되었습니다!');
     }
   });
 
@@ -76,6 +78,15 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
     ));
   };
 
+  const clickDeleteCourseHandler = (id) => {
+    console.log("jhh:", id, "11:", selectedPlaces);
+    const newPlaces = selectedPlaces.filter((slectedPlace) => {
+      return slectedPlace.id !== id
+    })
+    console.log("new", newPlaces);
+    setSelectedPlaces(newPlaces);
+
+  }
   const onClickCourseSaveButtonHandler = async (e) => {
     e.preventDefault();
 
@@ -116,7 +127,7 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
       imageUrls
     });
 
-    if (mutation.isSuccess) alert('코스가 등록되었습니다!');
+    //if (mutation.isSuccess) alert('코스가 등록되었습니다!');
     setSelectedPlaces([]);
     setCourseTitle('');
 
@@ -135,6 +146,7 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
                 <p>{place.category_name}</p>
                 <p>{place.phone ? place.phone : ''}</p>
                 <p>{place.place_url}</p>
+                <button onClick={() => clickDeleteCourseHandler(place.id)}>코스에서 삭제</button>
               </StyledDatingListContainer>
             );
           })}
@@ -227,6 +239,17 @@ const StyledDatingListContainer = styled.div`
   & p {
     font-size: 1rem;
     margin-top: 10px;
+  }
+  button {
+    margin-left: 240px;
+    background-image: url(/addCourseButton.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    width: 115px;
+    height: 60px;
+    border: none;
   }
 `;
 
