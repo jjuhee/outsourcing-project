@@ -47,13 +47,13 @@ function Profile() {
     isError: removeIsError,
     data: courseRemoveData
   } = useQuery(['course'], deleteDatingCourse);
-  
+
   const userCourse = courseData?.filter(
     (course) => course.userUid === userInfo.uid
   );
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewURL, setPreviewURL] = useState(null);
+  // const [selectedFile, setSelectedFile] = useState(null);
+  // const [previewURL, setPreviewURL] = useState(null);
 
   /** 버튼 클릭시 Localstorage에 있는 값이 삭제되며, 다시 로그인 페이지로 간다.*/
   const logOutHandler = async (event) => {
@@ -186,7 +186,7 @@ function Profile() {
         ) : (
           <Avatar src={userInfo.avatar} size="large" />
         )}
-        
+
         <div>
           {isEditing ? (
             <input
