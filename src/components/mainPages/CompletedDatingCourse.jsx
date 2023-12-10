@@ -30,8 +30,8 @@ function CompletedDatingCourse() {
               {isError && <p>서버오류 발생!</p>}
               <StyledAvatarNicknameDayContainer>
                 <StyledAvatarNickname>
-                  <img src={`${profileImg}`} alt="프로필 이미지" />
-                  <div>{course.nickname}님</div>
+                  <img src={`${course.userAvatar || profileImg}`} alt="프로필 이미지" />
+                  <div>{course.userNickname}님</div>
                 </StyledAvatarNickname>
                 <StyledWriteDay>작성날짜: {course.createAt}</StyledWriteDay>
               </StyledAvatarNicknameDayContainer>
