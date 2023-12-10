@@ -11,11 +11,10 @@ import { doc, getDocs, collection, query, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {
   logOut,
-  setUser,
   setUserAvatar,
   setUserNickname
 } from '../redux/modules/authSlice';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { getDatingCourses } from 'api/course';
 
 function Profile() {

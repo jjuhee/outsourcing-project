@@ -1,7 +1,7 @@
 import { getDatingCourses } from 'api/course';
 import MyMap from 'components/mainPages/MyMap';
 import React, { useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import profileImg from 'assets/happy-couple-facing-each-other-260nw-2122589009.webp';
@@ -13,10 +13,12 @@ function ShowMapWidthLine() {
   const { kakao } = window;
 
   // 1. 아니면
-  const queryClient = useQueryClient();
-  const courseData = queryClient.getQueryData(['course'], getDatingCourses);
-
-  const courseCurrentData = courseData.filter(
+  const {
+    isLoading,
+    isError,
+    data: courseData
+  } = useQuery(['course'], getDatingCourses);
+  const courseCurrentData = courseData?.filter(
     (course) => course.courseUid === id
   );
 
@@ -127,7 +129,10 @@ function ShowMapWidthLine() {
             <p>작성날짜: {course.createAt}</p>
             <p>작성한사람: {course.userNickname}</p>
             <StProfileImgContainer>
-              <img src={`${course.userAvatar || profileImg}`} alt="프로필 이미지" />
+              <img
+                src={`${course.userAvatar || profileImg}`}
+                alt="프로필 이미지"
+              />
             </StProfileImgContainer>
             <button onClick={() => courseClickHandler(course.courseUid)}>
               코스보기
