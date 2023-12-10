@@ -24,7 +24,7 @@ function Header() {
         <div>
           <HomeButton onClick={mainPagesHandler} />
 
-          <ProfileButton onClick={profileHandler} profileImg={profileImg} />
+          <ProfileButton onClick={profileHandler} />
         </div>
       </StyledBtn>
     </>
@@ -82,18 +82,9 @@ const HomeButton = styled.button`
 `;
 
 const ProfileButton = styled.button`
-  ${(props) => {
-    if (props.profileImg) {
-      return css`
-        background-image:url(${props.profileImg});
-      `
-    } else {
-      return css`
-        background-image: url(/profileImage.png);
-      `
-    }
-  }}
-    background-size: cover;
+ 
+  background-image: url(/profileImage.png);
+  background-size: cover;
 `;
 
 export default Header;
