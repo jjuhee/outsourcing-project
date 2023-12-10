@@ -21,9 +21,19 @@ const authSlice = createSlice({
       state.uid = null;
       state.nickname = undefined;
       localStorage.clear();
+    },
+    setUserAvatar: (state, action) => {
+      state.avatar = action.payload;
+      localStorage.setItem('avatar', state.avatar);
+    },
+
+    setUserNickname: (state, action) => {
+      state.nickname = action.payload;
+      localStorage.setItem('nickname', state.nickname);
     }
   }
 });
 
-export const { logIn, logOut } = authSlice.actions;
+export const { logIn, logOut, setUserAvatar, setUserNickname } =
+  authSlice.actions;
 export default authSlice.reducer;

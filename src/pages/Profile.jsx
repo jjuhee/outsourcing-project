@@ -2,33 +2,37 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { auth, db } from '../firebase/firebase.config';
+import { db, storage } from '../firebase/firebase.config';
 import Button from 'components/common/Button';
 import Avatar from 'components/common/Avartar';
 // import { collection, getDocs } from '../firebase/firebase.config';
-import { signOut, getAuth } from 'firebase/auth';
+import { signOut, getAuth, updateProfile } from 'firebase/auth';
 import { doc, getDocs, collection, query, updateDoc } from 'firebase/firestore';
-import { logOut } from '../redux/modules/authSlice';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { logOut, setUser, setUserAvatar, setUserNickname } from '../redux/modules/authSlice';
 
 function Profile() {
-  const [editingText, setEditingText] = useState('');
+  const userInfo = useSelector((state) => state.auth);
+  const [editingText, setEditingText] = useState(userInfo.nickname);
   const [isEditing, setIsEditing] = useState(false);
   const [users, setUsers] = useState([]);
   //const auth = getAuth();
   const navigate = useNavigate();
   const localUid = localStorage.getItem('uid');
   const dispatch = useDispatch();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewURL, setPreviewURL] = useState(null);
 
-  const userInfo = useSelector((state) => state.auth);
+
 
   /** 버튼 클릭시 Localstorage에 있는 값이 삭제되며, 다시 로그인 페이지로 간다.*/
   const logOutHandler = async (event) => {
-    //await signOut(auth); // TODO : 해야되는지 확인
+    await signOut(auth);
     navigate('/login');
     dispatch(logOut());
   };
 
-  /** 데이터 가져오기  TODO =>  get Query Client*/
+  /** 데이터 가져오기  TODO  : 하나만 가져오기*/
   useEffect(() => {
     const fetchData = async () => {
       const q = query(collection(db, 'users'));
@@ -43,51 +47,119 @@ function Profile() {
       });
 
       setUsers(initialUsers);
+      //const user = initialUsers.find((user) => user.uid === userInfo.uid);
+      //dispatch(us)
+
     };
     fetchData();
   }, []);
 
-  // 입력받은 값 파이어베이스에 수정하기
+  /** 입력받은 값 파이어베이스에 수정하기 */
   const onEditDoneHandler = async (event) => {
-    const user = users.find((user) => user.uid === userInfo.uid);
-    const userRef = doc(db, 'users', user.id);
-    await updateDoc(userRef, { ...user, nickname: editingText });
+    if (editingText.trim() === '') {
+      alert('닉네임을 입력해주세요!')
+      return;
+    }
+    if (editingText.trim() === userInfo.nickname && !selectedFile) {
+      alert('변경된 내용이 없습니다!')
+      return;
+    }
 
-    const editedNickname = users.map((user) => {
-      if (user.uid === userInfo.uid) {
-        return {
-          ...user,
-          nickname: editingText
-        };
-      } else {
-        return user;
+    const user = users.find((user) => user.uid === userInfo.uid);
+    const userRef = doc(db, 'users', user.id); // user.id === doc id
+
+    // 파일이 있으면 이미지를 Storage에 업로드
+    if (selectedFile) {
+      let downloadURL;
+      const imageRef = ref(
+        storage,
+        `profileImages/${user.uid}/${selectedFile.name}`
+      );
+      await uploadBytes(imageRef, selectedFile);
+      downloadURL = await getDownloadURL(imageRef);
+
+      if (downloadURL) {
+        // 사용자 정보에 프로필 이미지 URL 업데이트
+        await updateProfile(auth.currentUser, {
+          photoURL: downloadURL
+        });
+
+        // Firestore에 사용자 정보 업데이트
+        await updateDoc(userRef, { ...user, avatar: downloadURL });
+
+        // redux 업데이트
+        dispatch(setUserAvatar(downloadURL));
+        //초기화
+        setSelectedFile(null);
       }
-    });
-    setUsers(editedNickname);
+    } else {
+      // 변경이 있으면 ? 사용자 정보에 닉네임 업데이트
+      if (editingText.trim() !== userInfo.nickname) {
+        await updateProfile(auth.currentUser, {
+          displayName: editingText
+        });
+
+        await updateDoc(userRef, { ...user, nickname: editingText });
+        dispatch(setUserNickname(editingText));
+      }
+    }
+
+    // const editedNickname = users.map((user) => {
+    //   if (user.uid === userInfo.uid) {
+    //     return {
+    //       ...user,
+    //       nickname: editingText
+    //     };
+    //   } else {
+    //     return user;
+    //   }
+    // });
+    //setUsers(editedNickname);
     setIsEditing(false);
+  };
+
+  /** file 선택 */
+  const fileSelectHandler = (event) => {
+    const file = event.target.files[0];
+
+    // 선택한 파일의 미리보기를 생성
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewURL(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    setSelectedFile(file);
   };
 
   return (
     <Container>
       <ProfileWrapper>
         <h1>프로필</h1>
-        <label>
-          <Avatar size="large" />
-          <input type="file" accept="image/jpg, image/png" />
-        </label>
+        {isEditing ?
+          <label>
+            <Avatar src={previewURL || userInfo.avatar} size="large" />
+            <input type="file" accept="image/*" onChange={fileSelectHandler} />
+          </label>
+          :
+          <Avatar src={userInfo.avatar} size="large" />
+        }
         <div>
           {isEditing ? (
-            <input
+            <input defaultValue={userInfo.nickname}
               autoFocus
               onChange={(event) => setEditingText(event.target.value)}
             />
           ) : (
             <Nickname>
-              {users
+              {userInfo.nickname}
+              {/* {users
                 .filter((item) => item.uid === userInfo.uid)
                 .map((item) => {
                   return item.nickname;
-                })}
+                })} */}
             </Nickname>
           )}
 
@@ -100,12 +172,12 @@ function Profile() {
             <button onClick={() => setIsEditing(true)}>수정하기</button>
           )}
         </div>
-        <h1>내가 만든 코스</h1>
+        {/* <h1>내가 만든 코스</h1>
         <div>
           <div>???</div>
           <div>???</div>
           <div>???</div>
-        </div>
+        </div> */}
 
         <div>
           <Button text="로그아웃" onClick={logOutHandler}>

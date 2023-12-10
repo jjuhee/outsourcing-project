@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import defaultUser from 'assets/defaultUser.png';
+import defaultUser from 'assets/happy-couple-facing-each-other-260nw-2122589009.webp';
 
 export default function Avatar({ src, size }) {
   return (

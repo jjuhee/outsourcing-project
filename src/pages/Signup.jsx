@@ -126,7 +126,7 @@ function Signup() {
     }
   };
 
-  const handleFileSelect = (event) => {
+  const fileSelectHandler = (event) => {
     const file = event.target.files[0];
 
     // 선택한 파일의 미리보기를 생성
@@ -193,7 +193,7 @@ function Signup() {
             type="file"
             accept="image/*"
             id="profileImg"
-            onChange={handleFileSelect}
+            onChange={fileSelectHandler}
           />
         </div>
         <ButtonContainer>
