@@ -15,7 +15,7 @@ function MainPages() {
 
 const MainContainer = styled.div`
   position: relative;
-  height: 100vh;
+  height: auto;
   overflow: hidden;
 `;
 
