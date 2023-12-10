@@ -24,7 +24,7 @@ function CompletedDatingCourse() {
           return (
             <StyledCourseWrapper
               key={course.courseUid}
-              onSubmit={() => goToDetailButtonHandler(course.courseUid)}
+              onClick={() => goToDetailButtonHandler(course.courseUid)}
             >
               {isLoading && <LodingLayer>로딩중입니다!</LodingLayer>}
               {isError && <p>서버오류 발생!</p>}
