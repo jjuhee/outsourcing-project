@@ -4,9 +4,11 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import profileImg from 'assets/happy-couple-facing-each-other-260nw-2122589009.webp';
+import { useSelector } from 'react-redux';
 
 function CompletedDatingCourse() {
   const { isLoading, isError, data } = useQuery(['course'], getDatingCourses);
+  const userInfo = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const goToDetailButtonHandler = (uid) => {
@@ -26,9 +28,9 @@ function CompletedDatingCourse() {
             {isError && <p>서버오류 발생!</p>}
             <StCourseTitle>코스명: {course.courseTitle}</StCourseTitle>
             <StWriteDay>작성날짜: {course.createAt}</StWriteDay>
-            <StWriter>작성한사람</StWriter>
+            <StWriter>작성한사람: {userInfo.nickname}</StWriter>
             <StProfileImgContainer>
-              <img src={`${profileImg}`} alt="프로필 이미지" />
+              <img src={`${userInfo.avatar || profileImg}`} alt="프로필 이미지" />
             </StProfileImgContainer>
             <StCourseDetailButton
               onClick={() => goToDetailButtonHandler(course.courseUid)}

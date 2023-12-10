@@ -6,6 +6,7 @@ import styled, { keyframes } from 'styled-components';
 import { QueryClient, useMutation } from 'react-query';
 import { addDatingCourse } from 'api/course';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useSelector } from 'react-redux';
 
 function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   // 사진 업로드 상태
@@ -15,7 +16,8 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
   const [courseTitle, setCourseTitle] = useState('');
 
-  const uuid = uuid4();
+  const { uid, nickname, avatar } = useSelector((state) => state.auth);
+
   const TODAY = dayjs().format('YY-MM-DD HH:mm:ss');
 
   const queryClient = new QueryClient();
@@ -105,8 +107,9 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
       imageUrls = await uploadImagesAndGetURLs();
     }
     mutation.mutate({
-      // 현재 임시로 uuid 랜덤 생성 -> 유저 가입 uid로 바꿔놓기
-      userUid: uuid,
+      userUid: uid,
+      userNickname: nickname,
+      userAvatar: avatar,
       courseTitle: courseTitle,
       places: selectedPlaces,
       createAt: TODAY,

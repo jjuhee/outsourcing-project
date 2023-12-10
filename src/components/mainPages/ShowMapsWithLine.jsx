@@ -125,9 +125,9 @@ function ShowMapWidthLine() {
             <h3>{course.courseTitle}</h3>
             <p>{course.createAt}</p>
             <p>작성날짜: {course.createAt}</p>
-            <p>작성한사람</p>
+            <p>작성한사람: {course.userNickname}</p>
             <StProfileImgContainer>
-              <img src={`${profileImg}`} alt="프로필 이미지" />
+              <img src={`${course.userAvatar || profileImg}`} alt="프로필 이미지" />
             </StProfileImgContainer>
             <button onClick={() => courseClickHandler(course.courseUid)}>
               코스보기

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 function Header() {
+  const profileImg = useSelector((state) => state.auth.avatar)
   const navigate = useNavigate();
   const mainPagesHandler = () => {
     navigate('/');
