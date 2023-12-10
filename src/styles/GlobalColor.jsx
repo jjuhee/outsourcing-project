@@ -17,6 +17,7 @@ const GlobalColor = createGlobalStyle`
     --search-button:#4dcaff;
     --footer-backgound:#78b3cd;
     --date-course-title:#eaa955;
+    --white: #fff;
     --recommend-date-title:#b2b2ff;
   }
 `;
