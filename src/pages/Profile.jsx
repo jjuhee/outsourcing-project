@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { db, storage } from '../firebase/firebase.config';
 import Button from 'components/common/Button';
@@ -9,7 +9,12 @@ import Avatar from 'components/common/Avartar';
 import { signOut, getAuth, updateProfile } from 'firebase/auth';
 import { doc, getDocs, collection, query, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { logOut, setUser, setUserAvatar, setUserNickname } from '../redux/modules/authSlice';
+import {
+  logOut,
+  setUser,
+  setUserAvatar,
+  setUserNickname
+} from '../redux/modules/authSlice';
 
 function Profile() {
   const userInfo = useSelector((state) => state.auth);
@@ -22,15 +27,12 @@ function Profile() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewURL, setPreviewURL] = useState(null);
 
-
-
   /** 버튼 클릭시 Localstorage에 있는 값이 삭제되며, 다시 로그인 페이지로 간다.*/
   const logOutHandler = async (event) => {
     await signOut(auth);
     navigate('/login');
     dispatch(logOut());
   };
-
 
   /** 데이터 가져오기  TODO  : 하나만 가져오기*/
   useEffect(() => {
@@ -49,7 +51,6 @@ function Profile() {
       setUsers(initialUsers);
       //const user = initialUsers.find((user) => user.uid === userInfo.uid);
       //dispatch(us)
-
     };
     fetchData();
   }, []);
@@ -57,11 +58,11 @@ function Profile() {
   /** 입력받은 값 파이어베이스에 수정하기 */
   const onEditDoneHandler = async (event) => {
     if (editingText.trim() === '') {
-      alert('닉네임을 입력해주세요!')
+      alert('닉네임을 입력해주세요!');
       return;
     }
     if (editingText.trim() === userInfo.nickname && !selectedFile) {
-      alert('변경된 내용이 없습니다!')
+      alert('변경된 내용이 없습니다!');
       return;
     }
 
@@ -138,17 +139,20 @@ function Profile() {
     <Container>
       <ProfileWrapper>
         <h1>프로필</h1>
-        {isEditing ?
+
+        {isEditing ? (
           <label>
             <Avatar src={previewURL || userInfo.avatar} size="large" />
             <input type="file" accept="image/*" onChange={fileSelectHandler} />
           </label>
-          :
+        ) : (
           <Avatar src={userInfo.avatar} size="large" />
-        }
+        )}
+
         <div>
           {isEditing ? (
-            <input defaultValue={userInfo.nickname}
+            <input
+              defaultValue={userInfo.nickname}
               autoFocus
               onChange={(event) => setEditingText(event.target.value)}
             />
@@ -169,8 +173,17 @@ function Profile() {
               <button onClick={onEditDoneHandler}>수정완료</button>
             </div>
           ) : (
-            <button onClick={() => setIsEditing(true)}>수정하기</button>
+            <NickNameEditButton onClick={() => setIsEditing(true)}>
+              수정하기
+            </NickNameEditButton>
           )}
+        </div>
+        <div
+          style={{
+            background: 'red'
+          }}
+        >
+          <h1>내가 만든 코스</h1>
         </div>
         {/* <h1>내가 만든 코스</h1>
         <div>
@@ -179,14 +192,14 @@ function Profile() {
           <div>???</div>
         </div> */}
 
-        <div>
-          <Button text="로그아웃" onClick={logOutHandler}>
+        <BottomButtonsWrapper>
+          <LogoutButton text="로그아웃" onClick={logOutHandler}>
             로그아웃
-          </Button>
-          <Button text="홈으로" onClick={() => navigate('/')}>
+          </LogoutButton>
+          <HomeButton text="홈으로" onClick={() => navigate('/')}>
             홈으로
-          </Button>
-        </div>
+          </HomeButton>
+        </BottomButtonsWrapper>
       </ProfileWrapper>
     </Container>
   );
@@ -194,18 +207,21 @@ function Profile() {
 
 export default Profile;
 
+//전체 배경색
 const Container = styled.div`
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  background-color: var(--login-signup-background-color);
 `;
-
+//프로필란 배경색
 const ProfileWrapper = styled.section`
-  width: 700px;
+  width: 50vw;
+  height: 80vh;
   border-radius: 12px;
-  background-color: lightgoldenrodyellow;
-  padding: 80px;
+  background-color: var(--login-signup-input-background-color);
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -233,6 +249,21 @@ const ProfileWrapper = styled.section`
   }
 `;
 
+//닉네임수정하기 버튼
+const NickNameEditButton = styled.button`
+  width: 15vw;
+  height: 3vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 6vw;
+  align-self: center;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
+`;
 const Nickname = styled.span`
   font-size: 24px;
   font-weight: 700;
@@ -241,4 +272,43 @@ const Nickname = styled.span`
 const UserId = styled.span`
   font-size: 16px;
   color: gray;
+`;
+
+//로그아웃 버튼
+const LogoutButton = styled.button`
+  margin-right: 20%;
+  height: 4vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 15vw;
+  margin-top: 20px;
+  align-self: center;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
+`;
+//홈으로버튼
+const HomeButton = styled.button`
+  margin-right: 0%;
+  height: 4vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 15vw;
+  margin-top: 20px;
+  align-self: center;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
+`;
+const BottomButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 18%;
 `;
