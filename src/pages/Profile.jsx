@@ -9,20 +9,34 @@ import Avatar from 'components/common/Avartar';
 import { signOut, getAuth, updateProfile } from 'firebase/auth';
 import { doc, getDocs, collection, query, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { logOut, setUser, setUserAvatar, setUserNickname } from '../redux/modules/authSlice';
+import {
+  logOut,
+  setUser,
+  setUserAvatar,
+  setUserNickname
+} from '../redux/modules/authSlice';
+import { useQuery, useQueryClient } from 'react-query';
+import { getDatingCourses } from 'api/course';
 
 function Profile() {
   const userInfo = useSelector((state) => state.auth);
   const [editingText, setEditingText] = useState(userInfo.nickname);
   const [isEditing, setIsEditing] = useState(false);
   const [users, setUsers] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewURL, setPreviewURL] = useState(null);
   const auth = getAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewURL, setPreviewURL] = useState(null);
 
-
+  const {
+    isLoading,
+    isError,
+    data: courseData
+  } = useQuery(['course'], getDatingCourses);
+  const userCourse = courseData?.filter(
+    (course) => course.userUid === userInfo.uid
+  );
 
   /** 버튼 클릭시 Localstorage에 있는 값이 삭제되며, 다시 로그인 페이지로 간다.*/
   const logOutHandler = async (event) => {
@@ -30,7 +44,6 @@ function Profile() {
     navigate('/login');
     dispatch(logOut());
   };
-
 
   /** 데이터 가져오기  TODO  : 하나만 가져오기*/
   useEffect(() => {
@@ -49,7 +62,6 @@ function Profile() {
       setUsers(initialUsers);
       //const user = initialUsers.find((user) => user.uid === userInfo.uid);
       //dispatch(us)
-
     };
     fetchData();
   }, []);
@@ -57,11 +69,11 @@ function Profile() {
   /** 입력받은 값 파이어베이스에 수정하기 */
   const onEditDoneHandler = async (event) => {
     if (editingText.trim() === '') {
-      alert('닉네임을 입력해주세요!')
+      alert('닉네임을 입력해주세요!');
       return;
     }
     if (editingText.trim() === userInfo.nickname && !selectedFile) {
-      alert('변경된 내용이 없습니다!')
+      alert('변경된 내용이 없습니다!');
       return;
     }
 
@@ -138,17 +150,18 @@ function Profile() {
     <Container>
       <ProfileWrapper>
         <h1>프로필</h1>
-        {isEditing ?
+        {isEditing ? (
           <label>
             <Avatar src={previewURL || userInfo.avatar} size="large" />
             <input type="file" accept="image/*" onChange={fileSelectHandler} />
           </label>
-          :
+        ) : (
           <Avatar src={userInfo.avatar} size="large" />
-        }
+        )}
         <div>
           {isEditing ? (
-            <input defaultValue={userInfo.nickname}
+            <input
+              defaultValue={userInfo.nickname}
               autoFocus
               onChange={(event) => setEditingText(event.target.value)}
             />
@@ -172,12 +185,30 @@ function Profile() {
             <button onClick={() => setIsEditing(true)}>수정하기</button>
           )}
         </div>
-        {/* <h1>내가 만든 코스</h1>
-        <div>
-          <div>???</div>
-          <div>???</div>
-          <div>???</div>
-        </div> */}
+
+        <StCourseWrapper>
+          <StCourseTitle>내 코스 보기</StCourseTitle>
+          <StCourseContainer>
+            {userCourse?.map((course) => {
+              return (
+                <StCourseList key={course.courseUid}>
+                  <li>{course.courseTitle}</li>
+                  <li>{course.createAt}</li>
+                  {course.places?.map((place) => {
+                    return (
+                      <StPlaceList key={place.id}>
+                        <li>{place.place_name}</li>
+                        <li>{place.category_group_name}</li>
+                        <li>{place.address_name}</li>
+                        <li>{place.phone}</li>
+                      </StPlaceList>
+                    );
+                  })}
+                </StCourseList>
+              );
+            })}
+          </StCourseContainer>
+        </StCourseWrapper>
 
         <div>
           <Button text="로그아웃" onClick={logOutHandler}>
@@ -242,3 +273,13 @@ const UserId = styled.span`
   font-size: 16px;
   color: gray;
 `;
+
+const StCourseWrapper = styled.div``;
+
+const StCourseTitle = styled.h3``;
+
+const StCourseContainer = styled.div``;
+
+const StCourseList = styled.ul``;
+
+const StPlaceList = styled.ul``;
