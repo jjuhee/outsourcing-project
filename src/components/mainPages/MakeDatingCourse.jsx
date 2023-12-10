@@ -26,7 +26,7 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
       // Invalidate and refresh
       console.log('onSuccess');
       queryClient.invalidateQueries('course');
-      alert('코스가 등록되었습니다!');
+      console.log('코스가 등록되었습니다!');
     }
   });
 
@@ -79,14 +79,13 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
   };
 
   const clickDeleteCourseHandler = (id) => {
-    console.log("jhh:", id, "11:", selectedPlaces);
+    console.log('jhh:', id, '11:', selectedPlaces);
     const newPlaces = selectedPlaces.filter((slectedPlace) => {
-      return slectedPlace.id !== id
-    })
-    console.log("new", newPlaces);
+      return slectedPlace.id !== id;
+    });
+    console.log('new', newPlaces);
     setSelectedPlaces(newPlaces);
-
-  }
+  };
   const onClickCourseSaveButtonHandler = async (e) => {
     e.preventDefault();
 
@@ -146,7 +145,9 @@ function MakeDatingCourse({ selectedPlaces, setSelectedPlaces }) {
                 <p>{place.category_name}</p>
                 <p>{place.phone ? place.phone : ''}</p>
                 <p>{place.place_url}</p>
-                <button onClick={() => clickDeleteCourseHandler(place.id)}>코스에서 삭제</button>
+                <button onClick={() => clickDeleteCourseHandler(place.id)}>
+                  코스에서 삭제
+                </button>
               </StyledDatingListContainer>
             );
           })}
@@ -216,6 +217,20 @@ const shakeAnimation = keyframes`
   }
 `;
 
+const jeilyAnimation = keyframes`
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+  `;
+
 const StyledDateTitle = styled.div`
   display: flex;
   justify-content: center;
@@ -246,10 +261,12 @@ const StyledDatingListContainer = styled.div`
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: transparent;
-    width: 115px;
+    width: 112px;
     height: 60px;
-    border: none;
+    color: var(--white);
+    &:hover {
+      animation: ${jeilyAnimation} 0.5s;
+    }
   }
 `;
 
@@ -300,10 +317,11 @@ const StyledCourseSaveButton = styled.button`
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: transparent;
   width: 115px;
   height: 70px;
-  border: none;
+  &:hover {
+    animation: ${jeilyAnimation} 0.5s;
+  }
 `;
 
 const StSelectedFileWrapper = styled.div`

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import MakeDatingCourse from './MakeDatingCourse';
 import MyMap from './MyMap';
 
@@ -109,6 +109,20 @@ function MapSearch() {
 
 export default MapSearch;
 
+const jeilyAnimation = keyframes`
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+`;
+
 const StyledMapSearchCourseContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -157,7 +171,6 @@ const StyledPlaceInputButton = styled.form`
     border-radius: 50%;
     text-align: center;
     padding-left: 3px;
-    cursor: pointer;
   }
 `;
 
@@ -190,10 +203,11 @@ const StyledDateCourseMaking = styled.div`
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: transparent;
     width: 115px;
     height: 60px;
-    border: none;
+    &:hover {
+      animation: ${jeilyAnimation} 0.5s;
+    }
   }
 `;
 
