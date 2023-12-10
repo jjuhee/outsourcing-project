@@ -17,7 +17,6 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [users, setUsers] = useState([]);
   const auth = getAuth();
-  const auth = getAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
