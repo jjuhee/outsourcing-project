@@ -15,6 +15,7 @@ const GlobalColor = createGlobalStyle`
     --signup-profileimg-text:#0044ff;
     --search-input-background-color:#d1e9ff;
     --search-button:#4dcaff;
+    --footer-backgound:#78b3cd;
     --date-course-title:#eaa955;
   }
 `;

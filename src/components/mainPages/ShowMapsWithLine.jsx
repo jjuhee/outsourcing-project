@@ -119,7 +119,15 @@ function ShowMapWidthLine() {
 
   return (
     <>
-      <MyMap markers={markers} setMap={setMap} enableDrawing />
+      <MyMap
+        markers={markers}
+        setMap={setMap}
+        enableDrawing
+        style={{
+          width: '600px',
+          height: '600px'
+        }}
+      />
 
       {courseCurrentData?.map((course) => {
         return (
