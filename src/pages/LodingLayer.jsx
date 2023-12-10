@@ -12,7 +12,7 @@ function LodingLayer() {
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  margin-left: 28%;
+  margin-left: 350px;
   position: absolute;
   z-index: 999;
 `;
