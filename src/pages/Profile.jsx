@@ -15,7 +15,7 @@ import {
   updateDoc,
   deleteDoc
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL, list } from 'firebase/storage';
 import {
   logOut,
   setUserAvatar,
@@ -216,30 +216,35 @@ function Profile() {
             </NickNameEditButton>
           )}
         </div>
-
+        <StCourseTitle>내가 만든 코스</StCourseTitle>
         <StCourseWrapper>
-          <StCourseTitle>내가 만든 코스</StCourseTitle>
           <StCourseContainer>
             {userCourse?.map((course) => {
               return (
                 <StCourseList key={course.courseUid}>
-                  <li>{course.courseTitle}</li>
-                  <li>{course.createAt}</li>
+                  {/* 타이틀은 조금 강조하기 */}
+                  <CourseTilte>{course.courseTitle}</CourseTilte>
+                  {/* 갱신날짜를 보여줘야 할까요?? */}
+                  {/* <li>{course.createAt}</li> */}
                   {course.places?.map((place) => {
                     return (
                       <StPlaceList key={place.id}>
-                        <li>{place.place_name}</li>
-                        <li>{place.category_group_name}</li>
-                        <li>{place.address_name}</li>
-                        <li>{place.phone}</li>
+                        <DatelistWrapper>
+                          <DateListStartLine>
+                            {place.place_name}
+                          </DateListStartLine>
+                          <OtherList>{place.category_group_name}</OtherList>
+                          <OtherList>{place.address_name}</OtherList>
+                          <DateListEndLine>{place.phone}</DateListEndLine>
+                        </DatelistWrapper>
                       </StPlaceList>
                     );
                   })}
-                  <button
+                  <DeleteCourseButton
                     onClick={() => clickRemoveButtonHandler(course.courseUid)}
                   >
                     삭제
-                  </button>
+                  </DeleteCourseButton>
                 </StCourseList>
               );
             })}
@@ -272,7 +277,7 @@ const Container = styled.div`
 //프로필란 배경색
 const ProfileWrapper = styled.section`
   width: 50vw;
-  height: 80vh;
+  height: 100vh;
   border-radius: 12px;
   background-color: var(--login-signup-input-background-color);
   padding: 10px;
@@ -280,6 +285,8 @@ const ProfileWrapper = styled.section`
   flex-direction: column;
   align-items: center;
   gap: 24px;
+  margin-top: 5%;
+  margin-bottom: 5%;
 
   & > label > input {
     display: none;
@@ -326,7 +333,11 @@ const UserId = styled.span`
   color: gray;
 `;
 const StCourseWrapper = styled.div``;
-const StCourseTitle = styled.h3``;
+//
+const StCourseTitle = styled.h2`
+  margin-top: 1%;
+  font-size: 25px;
+`;
 const StCourseContainer = styled.div``;
 const StCourseList = styled.ul``;
 const StPlaceList = styled.ul``;
@@ -366,5 +377,59 @@ const BottomButtonsWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 18%;
+  margin-top: 5%;
+`;
+
+//데이트 리스트
+const DateListStartLine = styled.li`
+  border-top: 2px solid var(--search-button);
+  margin-top: 5%;
+`;
+const DateListEndLine = styled.li`
+  border-bottom: 2px solid var(--search-button);
+  margin-bottom: 8%;
+  position: relative;
+  //밑에 화살표 넣기
+  /* &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background: url('/ListArrow.png');
+    transform: translateX(-50%);
+    padding-top: 2%;
+    margin-bottom: 2%;
+  } */
+`;
+
+//리스트요소들끼리 간격
+const OtherList = styled.li`
+  margin: 5px 0; /* 다른 리스트 아이템 간의 간격 조절 */
+`;
+
+const DatelistWrapper = styled.li``;
+//코스타이틀
+const CourseTilte = styled.h2`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+`;
+
+//코스삭제하기 버튼
+const DeleteCourseButton = styled.button`
+  width: 10vw;
+  height: 3vh;
+  border-radius: 50px;
+  background-color: var(--login-signup-button);
+  cursor: pointer;
+  width: 3vw;
+  align-self: center;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--login-signup-button-transition);
+  }
+  border: 1px solid var(--login-signup-button-border);
 `;
