@@ -24,7 +24,13 @@ const getDatingCourses = async () => {
 const addDatingCourse = async (newDatingCourse) => {
   const courseApplyRef = collection(db, 'datingCourse');
   const newDocRef = doc(courseApplyRef);
-  await setDoc(newDocRef, { ...newDatingCourse, courseUid: newDocRef.id });
+  if ([...newDatingCourse.places].length > 1) {
+    await setDoc(newDocRef, { ...newDatingCourse, courseUid: newDocRef.id });
+    alert('코스가 등록되었습니다!');
+  } else {
+    alert('코스에 장소를 담아주세요!');
+    return false;
+  }
 };
 
 const deleteDatingCourse = async () => {
