@@ -90,7 +90,7 @@ function Signup() {
       // Firebase Firestore에 사용자 정보 추가
       const user = userCredential.user;
 
-      let downloadURL;
+      let downloadURL = "";
 
       // 이미지를 Storage에 업로드
       if (selectedFile) {
