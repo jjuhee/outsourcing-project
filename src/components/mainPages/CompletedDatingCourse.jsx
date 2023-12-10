@@ -37,20 +37,23 @@ function CompletedDatingCourse() {
               </StyledAvatarNicknameDayContainer>
 
               <StyledCourseContainer>
-                <StCourseTitle>코스명: {course.courseTitle}</StCourseTitle>
-                <Test>
+                <StyledCourseTitle>
+                  코스명: {course.courseTitle}
+                </StyledCourseTitle>
+
+                <StyledCourseList>
                   {course.places.map((place) => {
                     return (
-                      <StyledCourseList key={place.id}>
+                      <StyledEachCourseList key={place.id}>
                         <div>장소이름: {place.place_name}</div>
                         {course.imageUrls[0]}
                         <div>{place.imageUrls}</div>
                         <div>카테고리: {place.category_name}</div>
                         <div>주소: {place.address_name}</div>
-                      </StyledCourseList>
+                      </StyledEachCourseList>
                     );
                   })}
-                </Test>
+                </StyledCourseList>
               </StyledCourseContainer>
             </StyledCourseWrapper>
           );
@@ -69,6 +72,8 @@ const StyledPlaceWrapper = styled.div`
   background-position: center;
   width: 1200px;
   height: 1700px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const StyledRecommendTitle = styled.h2`
@@ -79,18 +84,22 @@ const StyledRecommendTitle = styled.h2`
 `;
 
 const StyledDaterecommendList = styled.div`
-  background-color: red;
-  width: 800px;
   display: flex;
   flex-direction: column;
-  margin: auto;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  position: relative;
+  flex: 1;
+  padding-top: 1600px;
 `;
 
 const StyledAvatarNicknameDayContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #b2b2ff;
+  background-color: var(--recommend-date-title);
+  width: 730px;
   padding: 10px;
 `;
 
@@ -109,9 +118,14 @@ const StyledAvatarNickname = styled.div`
 `;
 
 const StyledCourseWrapper = styled.form`
-  background-color: yellow;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  background-color: #ffeef7;
+  margin-top: 20px;
+  margin-bottom: 10px;
 `;
 
 const StyledWriteDay = styled.p`
@@ -126,30 +140,28 @@ const StyledCourseContainer = styled.div`
   margin-top: 15px;
 `;
 
-const Test = styled.div`
-  display: flex;
+const StyledCourseTitle = styled.p`
+  font-size: 1.3rem;
+  margin-bottom: 10px;
 `;
 
 const StyledCourseList = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding: 10px;
   font-size: 1rem;
-  line-height: 26px;
+  line-height: 35px;
 `;
 
-const StCourseTitle = styled.p`
-  font-size: 1.3rem;
-`;
-
-const StWriter = styled.p``;
-
-const StProfileImgContainer = styled.div`
-  img {
-    border-radius: 50%;
-    height: 80px;
+const StyledEachCourseList = styled.div`
+  border: 1.5px solid #ff22e9;
+  border-radius: 15px;
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 700px;
+  background: linear-gradient(to right, #ffb3c0 50%, transparent 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: background-position 0.3s ease;
+  &:hover {
+    background-position: left bottom;
   }
 `;
-
-const StCourseDetailButton = styled.button``;
