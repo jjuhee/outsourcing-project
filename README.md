@@ -42,6 +42,14 @@ Header : 타이틀과 홈 버튼, 프로필 버튼 상단 고정
 
 Footer : 업체정보
 
+## Development Environment
+1.React
+2.React-Router-Dom
+3.Redux-Tool-kit
+4.React-query
+5.styled-Component
+5.firebase
+
 
 ## 담당자
 코드 문의와 유지보수 문의는 아래 각 파트 담당자에게 부탁드립니다.
