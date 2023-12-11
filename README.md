@@ -44,11 +44,16 @@ Footer : 업체정보
 
 ## Development Environment
 1.React
+
 2.React-Router-Dom
+
 3.Redux-Tool-kit
+
 4.React-query
+
 5.styled-Component
-5.firebase
+
+6.firebase
 
 
 ## 담당자
