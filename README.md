@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# 커플더플 (Couple the Place)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+이 프로젝트는 스파르타 내일배움 캠프의 React 심화과정 05팀(5지고지리고렛잇고) 프로젝트입니다.
 
-## Available Scripts
+## 프로젝트 소개
+데이트 코스 공유 사이트
+친구나 애인끼리 가고싶은 장소를 조합하여 각자만의 데이트 코스를 만들 수 있는 웹사이트 입니다.
 
-In the project directory, you can run:
+## page 설명
 
-### `yarn start`
+### 로그인 전
+Login 로그인 페이지
+SignUp 회원가입 페이지
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 로그인 후
+MainPages : 지도와 장소검색을 통해 나만의 코스를 만드는 부분과 사용자들의 코스 게시물을 종합해서 보여준다.
+Profile : 나의 프로필과 내 게시물들을 보여준다.
+DetailPages : 게시물들의 상세페이지, 코스 경로와 상세정보를 표시한다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## component 설명
+### MainPages
+MapSearch : 장소를 검색하면 검색된 리스트를 보여주고, 지도에 검색된 장소들의 마커를 찍어 보여준다.
+ > MakeDatingCourse : 선택된 코스를 보여준다. 코스 저장 버튼을 누르면 코스가 파이어 베이스로 저장.
+CompletedDatingCourse : 코스 게시물들을 보여준다.
+Loding: 게시물 로딩 중에 보여주는 화면 ❤❤❤
 
-### `yarn test`
+### DetailPages
+ShowMapsWithLine : 클릭한 코스의 장소들만 마커를 찍어 보여주고 선으로 연결한 지도, 게시물 상세정보
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Common
+MyMap : 지도 Component  (MainPages 와 DetailPages 에서 사용)
+Avatar : 나의 프로필 이미지 Component (Profile과 CompletedDatingCourse 에서 사용)
+Header : 타이틀과 홈 버튼, 프로필 버튼 상단 고정
+Footer : 업체정보
 
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 담당자
+코드 문의와 유지보수 문의는 아래 각 파트 담당자에게 부탁드립니다.
+김주희 - MapSearch, ShowMapsWithLine
+천민규 - Login, css
+강지향 - MakeDatingCourse, CompletedDatingCourse
+윤홍상 - Login, SignUp
+김희찬 - Profile, Avatar
