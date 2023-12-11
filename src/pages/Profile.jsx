@@ -19,7 +19,7 @@ import {
   setUserAvatar,
   setUserNickname
 } from '../redux/modules/authSlice';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { deleteDatingCourse, getDatingCourses } from 'api/course';
 
 function Profile() {
@@ -39,11 +39,15 @@ function Profile() {
     data: courseData
   } = useQuery(['course'], getDatingCourses);
 
-  const {
-    isLoading: removeIsLoading,
-    isError: removeIsError,
-    data: courseRemoveData
-  } = useQuery(['course'], deleteDatingCourse);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(deleteDatingCourse, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('course');
+      alert('삭제되었습니다!');
+    }
+  });
+
+  //mutation.mutate({id});
 
   const userCourse = courseData?.filter(
     (course) => course.userUid === userInfo.uid
@@ -144,13 +148,7 @@ function Profile() {
   };
 
   const clickRemoveButtonHandler = async (uid) => {
-    const delCheck = window.confirm('정말 삭제하시겠습니까?');
-    if (delCheck) {
-      await deleteDoc(doc(db, 'datingCourse', uid));
-      alert('삭제되었습니다!');
-    } else {
-      return false;
-    }
+    mutation.mutate(uid);
   };
 
   return (
@@ -178,9 +176,7 @@ function Profile() {
               onChange={(event) => setEditingText(event.target.value)}
             />
           ) : (
-            <Nickname>
-              {userInfo.nickname}
-            </Nickname>
+            <Nickname>{userInfo.nickname}</Nickname>
           )}
 
           {isEditing ? (
