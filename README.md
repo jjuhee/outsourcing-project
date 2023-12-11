@@ -24,7 +24,7 @@ DetailPages : 게시물들의 상세페이지, 코스 경로와 상세정보를 
 ### MainPages
 MapSearch : 장소를 검색하면 검색된 리스트를 보여주고, 지도에 검색된 장소들의 마커를 찍어 보여준다.
 
- > MakeDatingCourse : 선택된 코스를 보여준다. 코스 저장 버튼을 누르면 코스가 파이어 베이스로 저장.
+MakeDatingCourse : 선택된 코스를 보여준다. 코스 저장 버튼을 누르면 코스가 파이어 베이스로 저장.
 
 CompletedDatingCourse : 코스 게시물들을 보여준다.
 
