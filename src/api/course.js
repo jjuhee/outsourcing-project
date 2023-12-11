@@ -32,8 +32,13 @@ const addDatingCourse = async (newDatingCourse) => {
   }
 };
 
-const deleteDatingCourse = async () => {
-  await deleteDoc(doc(db, 'datingCourse', 'courseUid'));
+const deleteDatingCourse = async (uid) => {
+  const delCheck = window.confirm('정말 삭제하시겠습니까?');
+  if (delCheck) {
+    await deleteDoc(doc(db, 'datingCourse', uid));
+  } else {
+    return false;
+  }
 };
 
 export { getDatingCourses, addDatingCourse, deleteDatingCourse };
